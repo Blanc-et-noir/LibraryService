@@ -156,7 +156,6 @@ public class BoardController {
 			return result;
 		}		
 	}
-	
 	@RequestMapping(value="/board/listArticles.do")
 	@ResponseBody
 	public HashMap listArticles(HttpServletRequest request, HttpServletResponse response) throws Exception{
