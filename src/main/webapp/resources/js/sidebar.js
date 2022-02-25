@@ -1,22 +1,46 @@
+//도서 대출 메뉴가 활성화 되었는지 여부를 나타냄.
 var open = false;
 
+
+
+
+//============================================================================================
+//도서 대출 메뉴를 닫는 메소드.
+//============================================================================================
 function closeWin(){
 	if(open==true){
 		open = false;
 		$("#checkOutForm").remove();
 	}
 }
-function openWin(){
-	//window.open("/LibraryService/book/checkOutForm.do", "도서 대출", "width=350, height=220, toolbar=no, menubar=no, scrollbars=no, resizable=no" );  
+
+
+
+
+
+//============================================================================================
+//도서 대출 메뉴를 활성화 하는 메소드
+//============================================================================================
+function openWin(){  
 	if(open==false){
 		open = true;
+		//
 		$("body").append("<form id='checkOutForm'><a id='checkOutFormCloseButton' onclick='closeWin()'>✖</a><input id='CHECK_OUT_CUSTOMER_ID' type='text' name='CUSTOMER_ID' autocomplete='off' placeholder='사용자 ID' class='input2'><input id='CHECK_OUT_BOOK_ISBN' type='text' name='BOOK_ISBN' autocomplete='off' placeholder='ISBN 코드' class='input2'><div style='display: flex; flex-direction: row; width: 100%; flex: 1;'><input id='CHECK_OUT_BUTTON' type='button' value='대출하기'><input id='CHECK_OUT_RESET_BUTTON' type='reset' value='새로고침'></div></form>");
+		//JQueryUI를 활용해 드래그가 가능하도록 설정.
 		$("#checkOutForm").draggable({ containment: "parent", scroll: false });
 	}
 }  
 
 $(document).ready(function(){
 	
+	
+	
+	
+	
+	//============================================================================================
+	//도서 대출 메뉴의 대출하기 버튼 클릭시, 도서 대출 요청을 백엔드 서버에 전달.
+	//파라미터로 사용자 ID와 도서 ISBN 코드가 필요.
+	//============================================================================================
 	$(document).on("click","#CHECK_OUT_BUTTON",function(){
 		if($("#CHECK_OUT_CUSTOMER_ID").val().length == 0){
 			alert("사용자 ID를 입력해야합니다.");
@@ -40,8 +64,8 @@ $(document).ready(function(){
 			})
 		}
 	});
-
-
+	
+	//쿠키를 활용해 내비게이션 메뉴의 서브메뉴들을 활성화 또는 비활성화 상태를 유지하도록 함.
 	for(var i=1; i<=5; i++){
 		if($.cookie("mainnav"+i)==undefined){
             $("#mainnav"+i).addClass("active");
@@ -51,6 +75,8 @@ $(document).ready(function(){
             $("#mainnav"+i).next(".subnav").slideUp(300,"easeInOutExpo");
 		}
 	}
+	
+	//쿠키를 이용한 다크모드가 설정되어있을경우 다크모드를 설정하는 버튼을 우측으로 이동시키고, 다크모드 테마를 설정. 
 	if($.cookie("darkmode")!=undefined){
 		document.documentElement.setAttribute("color-theme", "dark");
 		$("#darkmodebutton").addClass("active");
@@ -64,6 +90,13 @@ $(document).ready(function(){
 		document.documentElement.setAttribute("color-theme", "light");
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//다크모드버튼 클릭시 다크모드 버튼이 움직이고, 다크모드 쿠키를 그에 맞게 추가 또는 제거함.
+	//============================================================================================
     $(document).on("click","#darkmodebutton",function(e){
         if(!$(this).find(".switch").is(":animated")){
             if($(this).hasClass("active")){
@@ -88,6 +121,12 @@ $(document).ready(function(){
         }
     });
     
+    
+    
+    
+    //============================================================================================
+    //사이드바 활성화 버튼 클릭시, 사이드바 메뉴가 우측으로 슬라이드 되면서 포커싱됨.
+    //============================================================================================
     $(document).on("click","#sidebarbutton",function(e){
         if(!$("#sidebar").is(":animated")){
             if($(this).hasClass("active")){
@@ -98,7 +137,6 @@ $(document).ready(function(){
                 },600,"easeInOutExpo",function(){
 
                 });
-            	
                 $("#sidebar").animate({
                     "left":"-270px"
                 },600,"easeInOutExpo",function(){
@@ -126,7 +164,15 @@ $(document).ready(function(){
             }
         }
     });
-
+    
+    
+    
+    
+    
+    //============================================================================================
+    //메인메뉴 클릭시 하위 서브메뉴들이 드롭다운되면서, 쿠키를 추가 또는 제거함.
+    //해당 쿠키를 이용해서 열림 또는 닫힘상태를 유지함.
+    //============================================================================================
     $(document).on("click",".mainnav",function(e){
         if($(this).hasClass("active")){
             $(this).removeClass("active");
