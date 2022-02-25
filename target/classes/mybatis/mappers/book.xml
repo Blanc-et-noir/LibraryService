@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="book">
+	<select id="isOverdue" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT CUSTOMER_ID, NVL(CEIL((SYSDATE-CHECK_OUT_END_DATE)),0) OVERDUE
+		FROM CHECK_OUT
+		WHERE CHECK_OUT_ID = ${CHECK_OUT_ID} AND CHECK_OUT_RETURN_YN = 'N'
+	</select>
+	<select id="isExtensible" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT CHECK_OUT_RENEW_COUNT
+		FROM CHECK_OUT
+		WHERE CHECK_OUT_ID = ${CHECK_OUT_ID}
+	</select>
+	<select id="getCheckOutList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT CHECK_OUT_ID, CUSTOMER_ID, BOOK_ISBN,BOOK_NAME, CHECK_OUT_START_DATE, CHECK_OUT_END_DATE, CHECK_OUT_RENEW_COUNT, CHECK_OUT_END_DATE-SYSDATE DIFF
+			FROM CHECK_OUT NATURAL JOIN BOOK
+			WHERE CUSTOMER_ID = #{CUSTOMER_ID} AND CHECK_OUT_RETURN_YN = 'N'
+		]]>
+	</select>
+	<select id="checkCheckOutDate" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT TO_CHAR(CHECK_OUT_DATE,'YYYY.MM.DD HH24:MI:SS') CHECK_OUT_DATE_STRING, ROUND(SYSDATE - CHECK_OUT_DATE,18) DIFF
+			FROM CUSTOMER
+			WHERE CUSTOMER_ID = #{CUSTOMER_ID}
+		]]>
+	</select>
+	<select id="getCheckOutsCount" parameterType="java.util.HashMap" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(*)
+			FROM CHECK_OUT NATURAL JOIN CUSTOMER NATURAL JOIN BOOK
+		]]>
+		<where>
+			<![CDATA[CHECK_OUT_RETURN_YN = 'N' AND CHECK_OUT_RETURN_YN = 'N' AND CHECK_OUT_START_DATE >= TO_DATE(#{START_DATE},'YYYY-MM-DD HH24:MI:SS') AND CHECK_OUT_START_DATE <= TO_DATE(#{END_DATE},'YYYY-MM-DD HH24:MI:SS')]]>
+			<choose>
+				<when test="FLAG.equals('CUSTOMER_ID')">AND CUSTOMER_ID LIKE '%'||#{SEARCH}||'%'</when>
+				<when test="FLAG.equals('CUSTOMER_NAME')">AND CUSTOMER_NAME LIKE '%'||#{SEARCH}||'%'</when>
+				<when test="FLAG.equals('BOOK_ISBN')">AND BOOK_ISBN LIKE '%'||#{SEARCH}||'%'</when>
+				<when test="FLAG.equals('BOOK_NAME')">AND BOOK_NAME LIKE '%'||#{SEARCH}||'%'</when>
+			</choose>
+		</where>
+	</select>
+	<select id="listCheckOuts" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT *
+		FROM(
+			SELECT ROW_NUMBER() OVER(ORDER BY ${ORDERBY}) IDX, CHECK_OUT_ID, BOOK_ISBN, BOOK_NAME, CUSTOMER_ID, CUSTOMER_NAME, TO_CHAR(CHECK_OUT_START_DATE,'YYYY.MM.DD HH24:MI:SS') CHECK_OUT_START_DATE_STRING, TO_CHAR(CHECK_OUT_END_DATE,'YYYY.MM.DD HH24:MI:SS') CHECK_OUT_END_DATE_STRING, CHECK_OUT_RENEW_COUNT,NVL(CEIL((SYSDATE-CHECK_OUT_END_DATE)),0) OVERDUE
+			FROM CHECK_OUT NATURAL JOIN CUSTOMER NATURAL JOIN BOOK
+			<where>
+				<![CDATA[
+					CHECK_OUT_RETURN_YN = 'N' AND CHECK_OUT_START_DATE >= TO_DATE(#{START_DATE},'YYYY-MM-DD HH24:MI:SS') AND CHECK_OUT_START_DATE <= TO_DATE(#{END_DATE},'YYYY-MM-DD HH24:MI:SS')
+				]]>
+				<choose>
+					<when test="FLAG.equals('CUSTOMER_ID')">AND CUSTOMER_ID LIKE '%'||#{SEARCH}||'%'</when>
+					<when test="FLAG.equals('CUSTOMER_NAME')">AND CUSTOMER_NAME LIKE '%'||#{SEARCH}||'%'</when>
+					<when test="FLAG.equals('BOOK_ISBN')">AND BOOK_ISBN LIKE '%'||#{SEARCH}||'%'</when>
+					<when test="FLAG.equals('BOOK_NAME')">AND BOOK_NAME LIKE '%'||#{SEARCH}||'%'</when>
+				</choose>
+			</where>
+			)
+		<![CDATA[
+			WHERE IDX >= (((${SECTION}-1)*100)+((${PAGE}-1)*10)+1) AND IDX <= ((${SECTION}-1)*100+(${PAGE})*10)
+		]]>
+	</select>
+	<select id="analyzCheckOut" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		<![CDATA[
+			WITH TEMP(YEAR, MONTH, NUM, RATIO) AS(
+    			SELECT EXTRACT(YEAR FROM CHECK_OUT_START_DATE) YEAR, EXTRACT(MONTH FROM CHECK_OUT_START_DATE) MONTH,COUNT(*) NUM,ROUND(COUNT(*) * 100 / SUM(COUNT(*)) OVER(),2) "RATIO"
+    			FROM CHECK_OUT
+    			GROUP BY EXTRACT(YEAR FROM CHECK_OUT_START_DATE),EXTRACT(MONTH FROM CHECK_OUT_START_DATE)
+    			ORDER BY YEAR DESC, MONTH DESC
+			)SELECT YEAR, MONTH, NUM, RATIO FROM TEMP WHERE YEAR = ${YEAR} AND MONTH >= ${START_DATE} AND MONTH <= ${END_DATE};
+		]]>
+	</select>
+	
+	
+	<update id="decreaseBookNum" parameterType="java.util.HashMap">
+		<![CDATA[
+			UPDATE BOOK
+			SET BOOK_NUMBER = BOOK_NUMBER-1
+			WHERE BOOK_ISBN = #{BOOK_ISBN}
+		]]>
+	</update>
+	<update id="increaseBookNum" parameterType="java.util.HashMap">
+		<![CDATA[
+			UPDATE BOOK B
+			SET B.BOOK_NUMBER = B.BOOK_NUMBER+1
+			WHERE B.BOOK_ISBN = (
+				SELECT O.BOOK_ISBN
+				FROM CHECK_OUT O
+				WHERE O.CHECK_OUT_ID = ${CHECK_OUT_ID})
+		]]>
+	</update>
+	<update id="updateCheckOutDate" parameterType="java.util.HashMap">
+		<![CDATA[
+			UPDATE CUSTOMER
+			SET CHECK_OUT_DATE =
+				CASE 
+					WHEN CHECK_OUT_DATE-SYSDATE >=0 THEN CHECK_OUT_DATE+${OVERDUE}
+					ELSE SYSDATE+${OVERDUE}
+				END
+			WHERE CUSTOMER_ID = #{CUSTOMER_ID}
+		]]>
+	</update>
+
+	<update id="renewBook" parameterType="java.util.HashMap">
+		<![CDATA[
+			UPDATE CHECK_OUT
+			SET CHECK_OUT_END_DATE = CHECK_OUT_END_DATE+7,CHECK_OUT_RENEW_COUNT = CHECK_OUT_RENEW_COUNT+1
+			WHERE CHECK_OUT_ID = ${CHECK_OUT_ID}
+		]]>
+	</update>
+	
+	
+	
+	<insert id="insertCheckOut" parameterType="java.util.HashMap">
+		<![CDATA[
+			INSERT INTO CHECK_OUT VALUES(CHECK_OUT_SEQUENCE.NEXTVAL,#{CUSTOMER_ID},#{BOOK_ISBN},SYSDATE,SYSDATE+14,NULL,'N',0)
+		]]>		
+	</insert>
+	<insert id="sendMessage" parameterType="java.util.HashMap">
+		<![CDATA[
+			INSERT INTO MESSAGE_RECEIVED
+			SELECT MESSAGE_RECEIVED_SEQUENCE.NEXTVAL MESSAGE_ID,#{CUSTOMER_ID} SENDER_ID,CUSTOMER_ID,'[도서 연체] : '||BOOK_NAME||'도서에 대한 연체 알림입니다.' MESSAGE_TITLE,'ISBN : '||BOOK_ISBN||CHR(10)||CHR(13)||'도서명 : '||BOOK_NAME||CHR(10)||CHR(13)||'대출 시각 : '||TO_DATE(CHECK_OUT_START_DATE,'YYYY.MM.DD HH24:MI:SS')||CHR(10)||CHR(13)||'반납기한 : '||TO_DATE(CHECK_OUT_END_DATE,'YYYY.MM.DD HH24:MI:SS')||CHR(10)||CHR(13)||'연체 기한 : '||NVL(CEIL((SYSDATE-CHECK_OUT_END_DATE)),0)||CHR(10)||CHR(13)||'연장 횟수 : '||CHECK_OUT_RENEW_COUNT||CHR(10)||CHR(13)||'* 연체된 기간만큼 새로 도서를 대출할 수 없습니다.'||CHR(10)||CHR(13)||'* 대출기간을 연장하면 반납기한을 늦출 수 있습니다.' MESSAGE_CONTENT,SYSDATE MESSAGE_DATE
+			FROM CHECK_OUT NATURAL JOIN BOOK
+			WHERE sysdate - check_out_end_date > 0
+		]]>		
+	</insert>
+	
+	
+	
+	<update id="returnBook" parameterType="java.util.HashMap">
+		UPDATE CHECK_OUT
+		SET CHECK_OUT_RETURN_YN = 'Y', CHECK_OUT_RETURN_DATE = SYSDATE
+		WHERE CHECK_OUT_ID = ${CHECK_OUT_ID}
+	</update>
+</mapper>

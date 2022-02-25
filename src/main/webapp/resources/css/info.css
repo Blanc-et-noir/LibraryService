@@ -1,0 +1,66 @@
+#infoform{
+    display: block;
+    width: 620px;
+    height: 350px;
+    margin: 100px auto;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+}
+.input{
+	width: 100%;
+    height: 40px;
+    display: block;
+    outline: none;
+    text-indent: 20px;
+    font-size: 12px;
+    background-color:var(--c4);
+    color:var(--c8);
+}
+#infoPanel1,#infoPanel2,#questionPanel1,#questionPanel2,#otherPanel1,#otherPanel2{
+	display:flex;
+	width:100%;
+	height:40px;
+}
+.button{
+	flex:1;
+    height: 100%;
+    display: block;
+    outline: none;
+    border: none;
+    font-size: 12px;
+    color:white;
+    background-color:var(--c2);
+}
+.button:hover{
+	flex:1;
+    color:white;
+    background-color:var(--c3);
+}
+.subtitle{
+	color:var(--c5);
+}
+#EMAIL{
+	display:flex;
+}
+#EMAIL input{
+	width:50%;
+	height:30px;
+	color:var(--c8);
+	background-color:transparent;
+}
+#EMAIL input:hover{
+	color:var(--c2);
+}
+
+#infoPanel1,#infoPanel2{
+	margin-top:60px;
+}
+#otherPanel1,#otherPanel2{
+	margin-top:30px;
+}
+
+#infoDIV, #otherDIV{
+	width:300px;
+	margin:0 10px;
+}

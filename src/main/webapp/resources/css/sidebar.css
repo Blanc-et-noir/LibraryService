@@ -1,0 +1,310 @@
+@font-face {
+    font-family: notosans;
+    src: url(../font/NotoSansKR-Regular.otf);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: notosans;
+    outline:none;
+    border:none;
+    border-radius:0px;
+    font-size:12px;
+}
+*::-webkit-scrollbar{
+    display: none;
+}
+html,body{
+    width: 100%;
+    height: 100%;
+}
+a{
+	text-decoration : none;
+	color:var(--c8);
+}
+
+:root[color-theme='light'] {
+	--c1:#F1F1F1;
+  	--c2:#FF4447;
+  	--c3:#CC3638;
+  	--c4:white;
+  	--c5:black;
+  	--c6:white;
+  	--c7:black;
+  	--c8:#666666;
+  	--c9:#FF4447;
+  	--c10:#F6F6F6;
+}
+:root[color-theme='dark'] {
+	--c1:#2F3136;
+  	--c2:#1EE39F;
+  	--c3:#17B07B;
+  	--c4:#36393F;
+  	--c5:#F2D149;
+  	--c6:#36393F;
+  	--c7:#21FFD0;
+  	--c8:white;
+  	--c9:#F2D149;
+  	--c10:#4A4D5E;
+}
+
+#container{
+    width: 100%;
+    height: 100%;
+    background-color:var(--c1);
+    padding:20px;
+}
+
+input::placeholder {color:var(--c8);}
+input::-webkit-input-placeholder {color:var(--c8);}
+input:-ms-input-placeholder {color:var(--c8);}
+
+textarea::placeholder {color:var(--c8);}
+textarea::-webkit-input-placeholder {color:var(--c8);}
+textarea:-ms-input-placeholder {color:var(--c8);}
+/***********************************************************************************************************************/
+
+
+#cover{
+	width:100%;
+	height:100%;
+	background-color:black;
+	opacity:0;
+	display:none;
+	z-index:200;
+	position:fixed;
+}
+#sideContent{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color:var(--c1);
+}
+#sidebar{
+    width: 270px;
+    height: 100%;
+    position: fixed;
+    left: -270px;
+    z-index: 300;
+}
+#sidebarbutton{
+    width: 40px;
+    height: 40px;
+    right: 0;
+    position: absolute;
+    transform: translate(100%);
+    line-height: 50px;
+    text-align: center;
+    font-size: 25px;
+    background-color:var(--c2);
+    line-height:40px;
+    color:white;
+}
+#sidebarbutton:hover{
+    background-color:var(--c3);
+}
+#myinfo{
+    width: 100%;
+    height: 240px;
+    position : relative;
+    background-color:var(--c2);
+    color:white;
+}
+#CUSTOMER_INFO{
+	margin : 80px auto;
+	color : white;
+	text-align : center;
+	font-size : 40px;
+}
+#search{
+    width: 100%;
+    height: 80px;
+}
+#inputname{
+	width: 100%;
+    height: 100%;
+    background-color:var(--c4);
+    color:var(--c7);
+}
+#nav{
+    width: 100%;
+    flex: 1;
+    overflow: scroll;
+}
+.mainnav{
+    width: 100%;
+    height: 50px;
+    font-size: 15px;
+    font-weight:900;
+    line-height: 50px;
+    text-align: center;
+    margin-top: 10px;
+    display:block;
+    transition:text-indent 0.3s;
+    background-color:var(--c6);
+    color:var(--c5);
+}
+.option{
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 50px;
+    display:block;
+    transition:text-indent 0.3s;
+    background-color:var(--c6);
+    color:var(--c8);
+}
+.mainnav:hover, .option:hover{
+    text-indent:-30px;
+}
+#controlpanel{
+    width: 100%;
+    height: 60px;
+    position: relative;
+    background-color:var(--c2);
+}
+.controlbutton p{
+    display: block;
+    position: absolute;
+}
+.on{
+    background-color: #C2CDB5; 
+    width: 50%; 
+    height: 100%;
+}
+.off{
+    background-color: #F8869D; 
+    width: 50%; 
+    height: 100%;
+}
+.switch{
+    background-color: white;
+    width: 50%;
+    height: 100%;
+    position: absolute;
+}
+.buttons{
+    display: flex;
+    position: absolute;
+    height: 25px;
+    width: 70px
+}
+#inputname{
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    text-align: center;
+    outline: none;
+    border: none;
+}
+#join{
+	width : 50%;
+	height : 40px;
+	line-height : 40px;
+	position : absolute;
+	display : block;
+	bottom : 0px;
+	left : 0px;
+	text-align : center;
+	text-decoration : none;
+	background-color:var(--c2);
+	color:white;
+}
+#login{
+	width : 50%;
+	height : 40px;
+	line-height : 40px;
+	position : absolute;
+	display : block;
+	bottom : 0px;
+	right : 0px;
+	text-align : center;
+	text-decoration : none;
+	background-color:var(--c2);
+	color:white;
+}
+#logout{
+	width : 100%;
+	height : 40px;
+	line-height : 40px;
+	position : absolute;
+	display : block;
+	bottom : 0px;
+	text-align : center;
+	text-decoration : none;
+	background-color:var(--c2);
+	color:white;
+}
+#logout:hover, #join:hover, #login:hover{
+	background-color:var(--c3);
+	color:white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+#checkOutForm{
+    display: block;
+    width: 300px;
+    height: 160px;
+    display: flex;
+    flex-direction: column;
+    position:fixed;
+    top:10%;
+    left:10%;
+    padding :25px;
+}
+
+
+#CHECK_OUT_BUTTON,#CHECK_OUT_RESET_BUTTON{
+    width: 50%;
+    height: 40px;
+    display: block;
+    outline: none;
+    border: none;
+    background-color:var(--c2);
+    color:white;
+    font-size: 12px;
+}
+#CHECK_OUT_BUTTON:hover,#CHECK_OUT_RESET_BUTTON:hover{
+    background-color:var(--c3);
+    color:white;
+}
+
+#checkOutFormCloseButton{
+	display:block;
+	width:20px;
+	height:20px;
+	position:absolute;
+	right:5px;
+	background-color:var(--c2);
+	color:white;
+	line-height:20px;
+	text-align:center;
+}
+#checkOutFormCloseButton:hover{
+	background-color:var(--c3);
+}
+
+.input2{
+	width: 100%;
+    height: 60px;
+    display: block;
+    outline: none;
+    text-indent:20px;
+    font-size: 12px;
+    background-color:var(--c4);
+    color:var(--c8);
+}
