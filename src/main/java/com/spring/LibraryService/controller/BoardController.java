@@ -148,7 +148,6 @@ public class BoardController {
 			map.put("BOARD", BOARD);
 			map.put("ARTICLE_ID", ARTICLE_ID);
 			map.put("BOARD_FILE", BOARD+"_file");
-			
 			return boardService.modifyArticle(request, map);
 		}catch(Exception e) {
 			e.printStackTrace();
