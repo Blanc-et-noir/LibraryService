@@ -173,7 +173,11 @@ public class BoardController {
 		map.put("FLAG", request.getParameter("FLAG"));
 		map.put("SEARCH", request.getParameter("SEARCH"));
 		return boardService.listArticles(map);
+
 	}
+
+
+
 	@RequestMapping(value="/board/viewArticle.do")
 	public ModelAndView viewArticle(HttpServletRequest request, HttpServletResponse response){
 		try {
