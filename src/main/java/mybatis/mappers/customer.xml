@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="customer">
+
+	<insert id="join" parameterType="com.spring.LibraryService.vo.CustomerVO">
+		<![CDATA[
+			INSERT INTO CUSTOMER
+			VALUES(#{CUSTOMER_ID},#{CUSTOMER_PW},#{CUSTOMER_NAME},#{CUSTOMER_PHONE},#{CUSTOMER_EMAIL},#{CUSTOMER_ADDRESS},#{CUSTOMER_BDATE},1,#{SALT},SYSDATE)
+		]]>
+	</insert>
+	<insert id="insertPasswordHint" parameterType="java.util.HashMap">
+		<![CDATA[
+			INSERT INTO PASSWORD_HINT
+			VALUES(#{CUSTOMER_ID},#{PASSWORD_QUESTION_LIST_ID},#{PASSWORD_HINT_ANSWER})
+		]]>
+	</insert>
+	
+	
+	<update id="changePassword" parameterType="java.util.HashMap">
+		<![CDATA[
+			UPDATE CUSTOMER
+			SET CUSTOMER_PW = #{CUSTOMER_PW}, SALT = #{SALT} WHERE CUSTOMER_ID = #{CUSTOMER_ID}
+		]]>
+	</update>
+	<update id="changePasswordHint" parameterType="java.util.HashMap">
+		<![CDATA[
+			UPDATE PASSWORD_HINT
+			SET PASSWORD_QUESTION_LIST_ID = #{PASSWORD_QUESTION_LIST_ID}, PASSWORD_HINT_ANSWER = #{PASSWORD_HINT_ANSWER}
+			WHERE CUSTOMER_ID = #{CUSTOMER_ID}
+		]]>
+	</update>
+	<update id="changeOther" parameterType="java.util.HashMap">
+		<![CDATA[
+			UPDATE CUSTOMER
+			SET CUSTOMER_NAME = #{CUSTOMER_NAME}, CUSTOMER_BDATE = #{CUSTOMER_BDATE}, CUSTOMER_PHONE = #{CUSTOMER_PHONE}, CUSTOMER_EMAIL = #{CUSTOMER_EMAIL}, CUSTOMER_ADDRESS = #{CUSTOMER_ADDRESS}
+			WHERE CUSTOMER_ID = #{CUSTOMER_ID}
+		]]>
+	</update>
+	
+	
+	
+	<select id="login" resultType="com.spring.LibraryService.vo.CustomerVO" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT *
+			FROM CUSTOMER
+			WHERE CUSTOMER_ID = #{CUSTOMER_ID} AND CUSTOMER_PW = #{CUSTOMER_PW}
+		]]>
+	</select>
+	<select id="findByPhone" resultType="String" parameterType="String">
+		<![CDATA[
+			SELECT CUSTOMER_ID
+			FROM CUSTOMER
+			WHERE CUSTOMER_PHONE = #{CUSTOMER_PHONE}
+		]]>
+	</select>
+	<select id="findByEmail" resultType="String" parameterType="String">
+		<![CDATA[
+			SELECT CUSTOMER_ID
+			FROM CUSTOMER
+			WHERE CUSTOMER_EMAIL = #{CUSTOMER_EMAIL}
+		]]>
+	</select>
+	<select id="getPasswordQuestion" resultType="String" parameterType="String">
+		<![CDATA[
+			SELECT L.PASSWORD_QUESTION_LIST_CONTENT
+			FROM PASSWORD_HINT H, PASSWORD_QUESTION_LIST L
+			WHERE H.PASSWORD_QUESTION_LIST_ID = L.PASSWORD_QUESTION_LIST_ID AND H.CUSTOMER_ID = #{CUSTOMER_ID}
+		]]>
+	</select>
+	<select id="getSalt" resultType="String" parameterType="String">
+		<![CDATA[
+			SELECT SALT
+			FROM CUSTOMER
+			WHERE CUSTOMER_ID = #{CUSTOMER_ID}
+		]]>
+	</select>
+	<select id="getPasswordQuestionList" resultType="java.util.HashMap">
+		<![CDATA[
+			SELECT *
+			FROM PASSWORD_QUESTION_LIST
+		]]>
+	</select>
+	<select id="validateAnswer" resultType="String" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT C.CUSTOMER_EMAIL
+			FROM PASSWORD_HINT H, CUSTOMER C
+			WHERE C.CUSTOMER_ID = H.CUSTOMER_ID AND H.CUSTOMER_ID = #{CUSTOMER_ID} AND H.PASSWORD_HINT_ANSWER = #{PASSWORD_HINT_ANSWER}
+		]]>
+	</select>
+	<select id="validatePassword" resultType="String" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT CUSTOMER_ID
+			FROM CUSTOMER
+			WHERE CUSTOMER_ID = #{CUSTOMER_ID} AND CUSTOMER_PW = #{CUSTOMER_PW}
+		]]>
+	</select>
+</mapper>

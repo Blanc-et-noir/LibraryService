@@ -1,0 +1,49 @@
+#joinform{
+    display: block;
+    width: 350px;
+    height: 700px;
+    margin: 100px auto;
+    display: flex;
+    flex-direction: column;
+}
+.input{
+	width: 100%;
+    height: 40px;
+    display: block;
+    outline: none;
+    text-indent: 20px;
+    font-size: 12px;
+    background-color:var(--c4);
+    color:var(--c8);
+}
+#JOIN_BUTTON{
+	margin-top:30px;
+    width: 100%;
+    height: 60px;
+    display: block;
+    outline: none;
+    border: none;
+    font-size: 12px;
+    color:white;
+    background-color:var(--c2);
+}
+#JOIN_BUTTON:hover{
+	color:white;
+    background-color:var(--c3);
+}
+.subtitle{
+	color:var(--c5);
+}
+
+#EMAIL{
+	display:flex;
+}
+#EMAIL input{
+	width:50%;
+	height:30px;
+	color:var(--c8);
+	background-color:transparent;
+}
+#EMAIL input:hover{
+	color:var(--c2);
+}

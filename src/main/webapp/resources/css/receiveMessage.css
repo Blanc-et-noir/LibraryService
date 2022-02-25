@@ -1,0 +1,124 @@
+#DELETE_BUTTON, #SEARCH_BUTTON,#MESSAGE_SENT,#MESSAGE_RECEIVED{
+	background-color:var(--c2);
+	color:white;
+	font-size:12px;
+	width:40px;
+	height:100%;
+	text-align:center;
+	line-height:40px;
+}
+#TOP_PANEL input{
+	height:100%;
+	text-indent:20px;
+	flex:1;
+	background-color:var(--c4);
+	color:var(--c8);
+}
+#DELETE_BUTTON:hover, #SEARCH_BUTTON:hover,#MESSAGE_SENT:hover,#MESSAGE_RECEIVED:hover{
+	background-color:var(--c3);
+}
+#LIST{
+	table-layout: fixed;
+	margin:30px auto 0px auto;
+	border-collapse:collapse;
+	width:100%;
+	min-width:460px;
+	max-width:700px;
+	border:2px solid #e1e1e1;
+	border-left:none;
+	border-right:none;
+}
+
+#LIST input[type='checkbox']{
+	width:20px;
+	height:20px;
+	display:block;
+	margin:0px auto;
+}
+#LIST a{
+	color:var(--c8);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	display:block;
+	width:100%;
+	height:100%;
+}
+#LIST a:hover{
+	color:var(--c2);
+}
+#LIST tr{
+	height:40px;
+	line-height:20px;
+	border:2px solid #e1e1e1;
+	border-left:none;
+	border-right:none;
+	background-color:var(--c4);
+	color:var(--c8);
+}
+#LIST tr:hover{
+	background-color:var(--c1);
+}
+#LIST tr:nth-of-type(1){
+	height:40px;
+	line-height:40px;
+	
+}
+
+#LIST td:nth-of-type(1),#LIST th:nth-of-type(1){
+	width:40px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	text-align:center;
+}
+#LIST td:nth-of-type(2),#LIST th:nth-of-type(2){
+	width:100px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	text-align:center;
+}
+#LIST td:nth-of-type(4),#LIST th:nth-of-type(4){
+	width:80px;
+	text-align:center;
+}
+#TOP_PANEL{
+	border-collapse:collapse;
+	min-width:460px;
+	max-width:700px;
+	height:40px;
+	width:100%;
+	margin:100px auto 0px auto;
+	display:flex;
+}
+
+#SELECT_ALL_BUTTON, #TIME, #TITLE, #FLAG, #DATE{
+	color:var(--c8);
+	text-align:center;
+	background-color:var(--c1);
+
+}
+#paging{
+	text-align:center;
+	width:100%;
+	height:30px;
+	margin:25px auto;
+}
+#paging a{
+	display:inline-block;
+	font-size:12px;
+	width:25px;
+	margin:0px 5px;
+	height:100%;
+	text-indent:20px;
+}
+#paging a:hover{
+	color:var(--c2);
+}
+.active{
+	color:var(--c2);
+}
+.new{
+	color:var(--c2);
+}

@@ -1,0 +1,163 @@
+#listTable{
+	margin:50px auto 0px auto;
+	table-layout:fixed;
+	width:100%;
+	min-width:460px;
+	max-width:900px;
+	border:2px solid #e1e1e1;
+	border-left:none;
+	border-right:none;
+	border-collapse:collapse;
+}
+tr{
+	background-color:var(--c4);
+}
+tr:hover{
+	background-color:var(--c1);
+}
+th{
+	background-color:var(--c1);
+	color:var(--c8);
+	border:2px solid #e1e1e1;
+	border-left:none;
+	border-right:none;
+	padding:10px;
+	font-size:12px;
+}
+td{
+	padding:10px;
+	border:2px solid #e1e1e1;
+	border-left:none;
+	border-right:none;
+	background-color:inherit;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
+	font-size:12px;
+	color:var(--c8);
+}
+td a{
+	display:block;
+	width:100%;
+	height:100%;
+}
+tr th:nth-of-type(1),tr td:nth-of-type(1){
+	width:100px;
+	text-align:center;
+}
+tr td:nth-of-type(1) a{
+	font-size:8px;
+}
+tr th:nth-of-type(2),tr td:nth-of-type(2){
+	
+}
+tr th:nth-of-type(3),tr td:nth-of-type(3){
+	width:100px;
+	text-align:center;
+}
+tr th:nth-of-type(4),tr td:nth-of-type(4){
+	width:60px;
+	text-align:center;
+}
+tr th:nth-of-type(5),tr td:nth-of-type(5){
+	width:80px;
+	text-align:center;
+}
+tr th:nth-of-type(6),tr td:nth-of-type(6){
+	width:80px;
+	text-align:center;
+}
+tr td:nth-of-type(7),tr td:nth-of-type(8){
+	width:40px;
+	text-align:center;
+}
+tr th:nth-of-type(7){
+	width:80px;
+	text-align:center;
+}
+
+td a:hover{
+	color: var(--c2);
+}
+#panel{
+	width:100%;
+	min-width:460px;
+	max-width:900px;
+	height:40px;
+	display:flex;
+	margin:100px auto 0px auto;
+}
+select[name="flag"]{
+	width:100px;
+	display:block;
+	text-align:center;
+	background-color:var(--c4);
+	color:var(--c8);
+}
+
+input[name="data"]{
+	display:block;
+	flex:1;
+	text-indent:20px;
+	background-color:var(--c4);
+	color:var(--c8);
+}
+
+input[type="button"]{
+	min-width:50px;
+	display:block;
+	color:white;
+	background-color: var(--c2);
+}
+input[type="button"]:hover{
+	background-color: var(--c3);;
+}
+#write{
+	width:70px;
+	height:30px;
+	margin:15px auto;
+}
+
+#paging{
+	text-align:center;
+	width:100%;
+	height:30px;
+	margin:25px auto;
+}
+#paging a{
+	display:inline-block;
+	font-size:12px;
+	width:25px;
+	margin:0px 5px;
+	height:100%;
+	text-align:center;
+}
+
+#paging a:hover{
+	color:var(--c2);
+}
+
+#paging a.active{
+	color:var(--c2);
+}
+.new{
+	color:var(--c2);
+}
+.sub{
+	display:block;
+	min-width:20px;
+	line-height:40px;
+	text-align:center;
+	background-color:var(--c4);
+	color:var(--c8);
+}
+input[type=date]{
+	display:block;
+	min-width:60px;
+	font-size:10px;
+	background-color:var(--c4);
+	color:var(--c8);
+}
+td a:hover{
+	color: var(--c2);
+}

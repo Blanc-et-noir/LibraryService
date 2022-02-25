@@ -1,0 +1,41 @@
+#MESSAGE_SEND{
+	width:350px;
+	height:500px;
+	margin: 100px auto;
+	display:flex;
+	flex-direction:column;
+}
+#CUSTOMER_ID, #MESSAGE_TITLE{
+	height:40px;
+	line-height:40px;
+	text-indent:20px;
+	background-color:var(--c4);
+	color:var(--c8);
+}
+#MESSAGE_CONTENT{
+	padding:20px;
+	resize:none;
+	flex:1;
+	background-color:var(--c4);
+	color:var(--c8);
+}
+
+#MESSAGE_RETURN_BUTTON,#MESSAGE_DELETE_BUTTON{
+	display:block;
+	height:40px;
+	font-size:15px;
+	line-height:40px;
+	background-color:var(--c2);
+	color:white;
+	flex:1;
+}
+#MESSAGE_RETURN_BUTTON:hover,#MESSAGE_DELETE_BUTTON:hover{
+	color:white;
+	background-color:var(--c3);
+}
+.subtitle{
+	color:var(--c5);
+}
+#BOTTOM_PANEL{
+	display:flex;
+}
