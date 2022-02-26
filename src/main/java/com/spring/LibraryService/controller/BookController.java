@@ -19,6 +19,15 @@ public class BookController {
 	@Autowired
 	private BookService bookService;
 	
+	
+	
+	
+	
+	//============================================================================================
+	//관리자가 대출을 신청할 수 있도록 대출 신청 화면 뷰를 리턴하는 메소드.
+	//관리자가 아니라면 사용할 수 없으며, 현재는 독립적으로 구성된 뷰가 아니라 사이드바의 일부 기능으로 합쳐짐.
+	//따라서 지금은 사용하지 않는 메소드.
+	//============================================================================================
 	@RequestMapping(value="/book/checkOutForm.do")
 	public ModelAndView LOGONMAV_checkOutForm(HttpServletRequest request, HttpServletResponse response) {
 		CustomerVO customerVO = (CustomerVO) request.getSession().getAttribute("CUSTOMER");
@@ -29,6 +38,14 @@ public class BookController {
 		}
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//대출 현황 정보를 조회할 수 있는 화면 뷰를 리턴하는 메소드.
+	//관리자가 아니라면 접근할 수 없는 뷰.
+	//============================================================================================
 	@RequestMapping(value="/book/listCheckOutForm.do")
 	public ModelAndView LOGONMAV_listCheckOutForm(HttpServletRequest request, HttpServletResponse response) {
 		CustomerVO customerVO = (CustomerVO) request.getSession().getAttribute("CUSTOMER");
@@ -39,6 +56,14 @@ public class BookController {
 		}
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//대출현황 트렌드를 분석할 수 있는 화면 뷰를 리턴하는 메소드.
+	//2022.02.26 기준 미구현.
+	//============================================================================================
 	@RequestMapping(value="/book/analyzeCheckOutForm.do")
 	public ModelAndView LOGONMAV_analyzeCheckOutForm(HttpServletRequest request, HttpServletResponse response) {
 		CustomerVO customerVO = (CustomerVO) request.getSession().getAttribute("CUSTOMER");
@@ -50,6 +75,12 @@ public class BookController {
 	}
 	
 	
+	
+	
+	
+	//============================================================================================
+	//도서 대출 요청을 처리하는 메소드, 관리자가 아니면 사용할 수 없다.
+	//============================================================================================
 	@RequestMapping(value="/book/checkOut.do")
 	@ResponseBody
 	public HashMap LOGONMAP_checkOut(HttpServletRequest request, HttpServletResponse response){
@@ -72,6 +103,13 @@ public class BookController {
 		return result;
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//대출 정보에 대하여 해당 도서를 반납하도록 요청하는 메소드, 관리자가 아니면 사용할 수 없다.
+	//============================================================================================
 	@RequestMapping(value="/book/returnBook.do")
 	@ResponseBody
 	public HashMap LOGONMAP_returnBook(HttpServletRequest request, HttpServletResponse response){
@@ -94,6 +132,13 @@ public class BookController {
 		return result;
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//대출 반납 기한을 연장하는 메소드, 관리자가 아니어도 일반 사용자가 자신의 대출정보에 대하여 반납기한을 연장할 수 있다.
+	//============================================================================================
 	@RequestMapping(value="/book/renewBook.do")
 	@ResponseBody
 	public HashMap LOGONMAP_renewBook(HttpServletRequest request, HttpServletResponse response){
@@ -110,6 +155,13 @@ public class BookController {
 		return result;
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//대출 현황 목록을 얻는 메소드, 관리자가 아니면 사용할 수 없다.
+	//============================================================================================
 	@RequestMapping(value="/book/listCheckOuts.do")
 	@ResponseBody
 	public HashMap LOGONMAP_listCheckOuts(HttpServletRequest request, HttpServletResponse response){
@@ -138,6 +190,14 @@ public class BookController {
 		return result;
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//자신이 대출한 도서에 대하여 반납기한 연체 사실이 있는 사용자들에게 일괄적으로 연체 알림 메세지를 전송하는 메소드.
+	//관리자가 아니면 사용할 수 없다.
+	//============================================================================================
 	@RequestMapping(value="/book/sendMessage.do")
 	@ResponseBody
 	public HashMap LOGONMAP_sendMessage(HttpServletRequest request, HttpServletResponse response){

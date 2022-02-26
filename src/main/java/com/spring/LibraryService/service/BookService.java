@@ -16,17 +16,23 @@ public class BookService {
 	@Autowired
 	private BookDAO bookDAO;
 	
+	
+	
+	
+	//============================================================================================
+	//입력받은 정보를 토대로 도서 대출 신청을 처리하는 메소드.
+	//============================================================================================
 	public HashMap checkOut(HashMap param) throws Exception{
 		HashMap result = new HashMap();
 		
-		//1 - 해당 사용자의 대출현황이 3개 미만인가 검사
+		//해당 사용자의 대출현황이 3개 미만인가 검사.
 		List list = bookDAO.getCheckOutList(param);
 		if(list.size()>=3) {
 			result.put("FLAG", "OVERFLOW");
 			result.put("CONTENT", "대출한도를 초과하여 더이상 대출이 불가합니다.");
 			return result;
 		}else {
-			//2 - 현재 대출중 연체한 책이 있는가 검사
+			//현재 대출중 연체한 책이 있는가 검사.
 			HashMap map;
 			for(int i=0; i<list.size(); i++) {
 				map = (HashMap) list.get(i);
@@ -38,7 +44,7 @@ public class BookService {
 				}
 			}
 			
-			//3 - 대출가능시각 이후에 책을 대출하는 것인지 검사
+			//대출가능시각 이후에 책을 대출하는 것인지 검사.
 			map = bookDAO.checkCheckOutDate(param);
 			double time = Double.parseDouble(String.valueOf(map.get("DIFF")));
 			if(time<0) {
@@ -47,10 +53,10 @@ public class BookService {
 				return result;
 			}
 			
-			//책의 재고량 1 감소
+			//책의 재고량 1 감소시킴.
 			bookDAO.decreaseBookNum(param);
 			
-			//책대출현황에 해당 대출정보 추가
+			//책대출현황에 해당 대출정보 추가.
 			bookDAO.insertCheckOut(param);
 			
 			result.put("FLAG", "TRUE");
@@ -59,39 +65,52 @@ public class BookService {
 		}
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//대출한 도서에 대해 반납을 처리하는 메소드.
+	//============================================================================================
 	public HashMap returnBook(HashMap param) throws Exception{
 		HashMap result = new HashMap();
 		
-		//1. 반납하기전 먼저 SYSDATE와 반납날짜를 비교함, 연체 여부 확인
+		//반납하기전 먼저 현재날짜와 반납날짜를 비교함, 연체 여부 확인.
 		HashMap map = bookDAO.isOverdue(param);
 		int OVERDUE = Integer.parseInt(String.valueOf(map.get("OVERDUE")+""));
 		String CUSTOMER_ID = (String)map.get("CUSTOMER_ID");
 
-		//2. 연체했으면 사용자의 대출가능시각과 SYSDATE중 더 최신의값 + 연체일수 결과를 대출가능시각으로 업데이트
+		//연체했으면 사용자의 대출가능시각과 현재날짜중 더 최신의값 + 연체일수 결과를 대출가능시각으로 업데이트.
 		if(OVERDUE>0) {
 			param.put("OVERDUE", OVERDUE);
 			param.put("CUSTOMER_ID", CUSTOMER_ID);
 			bookDAO.updateCheckOutDate(param);
 		}
 		
-		//3. 해당 도서의 재고량을 1 증가시킴
+		//해당 도서의 재고량을 1 증가시킴.
 		bookDAO.increaseBookNum(param);
 		
-		//4. 대출현황에서 반납여부를 Y로 설정
+		//대출현황에서 반납여부를 Y로 설정.
 		bookDAO.returnBook(param);
-
 		
 		result.put("FLAG", "TRUE");
 		result.put("CONTENT", "도서 반납에 성공했습니다.");
 		return result;
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//도서 대출 반납기한 연장 요청을 처리하는 메소드.
+	//============================================================================================
 	public HashMap renewBook(HashMap param) throws Exception{
 		HashMap result = new HashMap();
 		
-		//1. 해당 대출정보의 연장 횟수가 2회 미만인지 검사
+		//해당 대출정보의 연장 횟수가 2회 미만인지 검사.
 		if(bookDAO.isExtensible(param)) {			
-			//2. 반납기간을 7일 연장함, 연장횟수 1증가
+			//반납기간을 7일 연장함, 연장횟수 1증가.
 			bookDAO.renewBook(param);
 			result.put("FLAG", "TRUE");
 			result.put("CONTENT", "대출기간 연장에 성공했습니다.");
@@ -102,6 +121,13 @@ public class BookService {
 		return result;
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//대출현황 목록을 조회하는 요청을 처리하는 메소드.
+	//============================================================================================
 	public HashMap listCheckOuts(HashMap param) throws Exception{
 		HashMap result = new HashMap();
 		
@@ -120,9 +146,14 @@ public class BookService {
 		return result;
 	}
 	
+	
+	
+	
+	
+	//============================================================================================
+	//연체된 대출정보가 존재하는 사용자들에게 연체 알림 메세지 일괄전송 요청을 처리하는 메소드.
+	//============================================================================================
 	public void sendMessage(HashMap param) throws Exception{
 		bookDAO.sendMessage(param);
 	}
-	
-
 }
