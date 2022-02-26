@@ -13,6 +13,12 @@ public class MailService {
 	@Autowired
 	private JavaMailSender mailSender;
 	
+	
+	
+	
+	//============================================================================================
+	//특정 이메일 주소로 메일을 전송하는 메소드.
+	//============================================================================================
 	@Async
 	public void sendMail(String to, String subject, String text) throws Exception{
 		MimeMessage message = mailSender.createMimeMessage();
