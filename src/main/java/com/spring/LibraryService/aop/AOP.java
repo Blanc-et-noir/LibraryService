@@ -22,6 +22,7 @@ import com.spring.LibraryService.vo.CustomerVO;
 @Transactional(propagation=Propagation.REQUIRED)
 public class AOP {
 	
+	/*
 	//============================================================================================
 	//모든 컨트롤러에 대하여, LOGONMAV_, LOGOFFMAV_, LOGONMAP_, LOGOFFMAP_ 으로 시작하는 메소드들에 AOP기능을 적용.
 	//============================================================================================
@@ -90,8 +91,8 @@ public class AOP {
 	private Object logonMAP(ProceedingJoinPoint jp) throws Throwable{
 		HashMap<String,String> result = new HashMap<String,String>();		
 		if(!isLogon(jp)) {
-			result.put("FLAG", "LOGOFF");
-			result.put("CONTENT", "로그인 정보가 유효하지 않습니다.");
+			result.put("flag", "false");
+			result.put("content", "로그인 정보가 유효하지 않습니다.");
 			return result;
 		}else {
 			return jp.proceed();		
@@ -111,11 +112,11 @@ public class AOP {
 	private Object logoffMAP(ProceedingJoinPoint jp) throws Throwable{
 		HashMap<String,String> result = new HashMap<String,String>();
 		if(isLogon(jp)) {
-			result.put("FLAG", "LOGON");
-			result.put("CONTENT", "이미 로그인중입니다.");
+			result.put("flag", "false");
+			result.put("content", "이미 로그인중입니다.");
 			return result;
 		}else {
-			return jp.proceed();		
+			return jp.proceed();
 		}
 	}
 	
@@ -166,7 +167,8 @@ public class AOP {
 	//로그인 여부를 검사하는 메소드.
 	//============================================================================================
 	private boolean isLogon(ProceedingJoinPoint jp) {
-		CustomerVO customerVO = (CustomerVO) getRequest(jp).getSession().getAttribute("CUSTOMER");
+		CustomerVO customerVO = (CustomerVO) getRequest(jp).getSession().getAttribute("customer");
 		return customerVO !=null?true:false;
 	}
+	*/
 }

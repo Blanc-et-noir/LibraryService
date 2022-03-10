@@ -29,23 +29,23 @@
     <div id="container" style="overflow: scroll;">
         <form id="joinform" action="${path}/customer/join.do" method="post">
         	<div class="subtitle">가입 정보</div>
-			<input id="CUSTOMER_ID" class="input" type="text" name="CUSTOMER_ID" placeholder="아이디" autocomplete="off">
-        	<input id="CUSTOMER_PW" class="input" type="password" name="CUSTOMER_PW" placeholder="비밀번호" autocomplete="off">
-            <input id="CUSTOMER_PW_CHECK" class="input" type="password" name="CUSTOMER_PW_CHECK" placeholder="비밀번호 확인" autocomplete="off">
+			<input id="CUSTOMER_ID" class="input" type="text" name="customer_id" placeholder="아이디" autocomplete="off">
+        	<input id="CUSTOMER_PW" class="input" type="password" name="customer_pw" placeholder="비밀번호" autocomplete="off">
+            <input id="CUSTOMER_PW_CHECK" class="input" type="password" name="customer_pw_check" placeholder="비밀번호 확인" autocomplete="off">
         	
         	<div class="subtitle" style="margin-top:40px;">비밀번호 찾기 질문</div>
-            <select name ="PASSWORD_QUESTION_LIST_ID" id="PASSWORD_QUESTION_LIST_ID" class="input"/>
-            <input id="PASSWORD_HINT_ANSWER" name ="PASSWORD_HINT_ANSWER" class="input" type="text" autocomplete="off">
+            <select id="PASSWORD_QUESTION_LIST_ID" name ="password_question_list_id" class="input"/>
+            <input id="PASSWORD_HINT_ANSWER" name ="password_hint_answer" class="input" type="text" autocomplete="off">
         	
         	<div class="subtitle" style="margin-top:40px;">개인 정보</div>
-            <input id="CUSTOMER_NAME" class="input" type="text" name="CUSTOMER_NAME" placeholder="이름" autocomplete="off">
-            <input id="CUSTOMER_BDATE" class="input" type="date" name="CUSTOMER_BDATE" placeholder="생일">
-            <input id="CUSTOMER_PHONE" class="input" type="text" name="CUSTOMER_PHONE" placeholder="010-XXXX-XXXX" autocomplete="off">
-            <input id="CUSTOMER_ADDRESS" class="input" type="text" name="CUSTOMER_ADDRESS" placeholder="주소" autocomplete="off">    
+            <input id="CUSTOMER_NAME" class="input" type="text" name="customer_name" placeholder="이름" autocomplete="off">
+            <input id="CUSTOMER_BDATE" class="input" type="date" name="customer_bdate" placeholder="생일">
+            <input id="CUSTOMER_PHONE" class="input" type="text" name="customer_phone" placeholder="010-XXXX-XXXX" autocomplete="off">
+            <input id="CUSTOMER_ADDRESS" class="input" type="text" name="customer_addres" placeholder="주소" autocomplete="off">    
             
             <div class="subtitle" style="margin-top:40px;">이메일</div>
-            <input id="CUSTOMER_EMAIL" class="input" type="text" name="CUSTOMER_EMAIL" placeholder="example@example.com" autocomplete="off">
-            <input id="EMAIL_AUTHCODE" class="input" type="text" name="EMAIL_AUTHCODE" placeholder="인증번호 " autocomplete="off">
+            <input id="CUSTOMER_EMAIL" class="input" type="text" name="customer_email" placeholder="example@example.com" autocomplete="off">
+            <input id="EMAIL_AUTHCODE" class="input" type="text" name="email_authcode" placeholder="인증번호 " autocomplete="off">
             <div id="EMAIL">
            		<input id="EMAIL_AUTHCODE_BUTTON" type="button" value="인증번호 받기">
            		<input id="EMAIL_AUTHEMAIL_BUTTON" type="button" value="인증하기">

@@ -1,5 +1,7 @@
 package com.spring.LibraryService.service;
 
+import java.util.HashMap;
+
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +22,12 @@ public class MailService {
 	//특정 이메일 주소로 메일을 전송하는 메소드.
 	//============================================================================================
 	@Async
-	public void sendMail(String to, String subject, String text) throws Exception{
+	public void sendMail(HashMap<String,String> param) throws Exception{
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
-		messageHelper.setTo(to);
-		messageHelper.setSubject(subject);
-		messageHelper.setText(text);
+		messageHelper.setTo(param.get("to"));
+		messageHelper.setSubject(param.get("subject"));
+		messageHelper.setText(param.get("text"));
 		messageHelper.setFrom("dign9060@gmail.com");
 		mailSender.send(message);
 	}

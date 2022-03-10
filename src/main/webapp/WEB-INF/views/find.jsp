@@ -35,25 +35,25 @@
         	<div id="FIND_ID_BLOCK">
         		<div class="subtitle">전화번호로 아이디 찾기</div>
         		<div style="display:flex; flex-direction:row;">
-        	    	<input id="CUSTOMER_PHONE" style="width:85%;" class="input" type="text" name="CUSTOMER_PHONE" placeholder="- 포함 전화번호" autocomplete="off">
+        	    	<input id="CUSTOMER_PHONE" style="width:85%;" class="input" type="text" name="customer_phone" placeholder="- 포함 전화번호" autocomplete="off">
             		<input id="FIND_BY_PHONE" type="button" value="찾기">
         		</div>
         		<div class="subtitle" style="margin-top:40px;">이메일로 아이디 찾기</div>
         		<div style="display:flex; flex-direction:row;">
-        			<input id="CUSTOMER_EMAIL" style="width:85%;" class="input" type="text" name="CUSTOMER_EMAIL" placeholder="이메일 주소" autocomplete="off">
+        			<input id="CUSTOMER_EMAIL" style="width:85%;" class="input" type="text" name="customer_email" placeholder="이메일 주소" autocomplete="off">
             		<input id="FIND_BY_EMAIL" type="button" value="찾기">
         		</div>
         	</div>
         	<div id="FIND_PW_BLOCK" style="display:none;">
         	    <div class="subtitle">비밀번호 찾기</div>
         		<div style="display:flex; flex-direction:row;">
-        			<input id="CUSTOMER_ID" style="width:85%;" class="input" type="text" name="CUSTOMER_ID" placeholder="비밀번호를 찾고자 하는 아이디" autocomplete="off">
+        			<input id="CUSTOMER_ID" style="width:85%;" class="input" type="text" name="customer_id" placeholder="비밀번호를 찾고자 하는 아이디" autocomplete="off">
         			<input id="GET_QUESTION_BUTTON" type="button" value="확인">
         		</div>
         		<div class="subtitle" style="margin-top:40px;">비밀번호 찾기 질문</div>
         		<p id="PASSWORD_QUESTION_LIST_CONTENT"></p>
         		<div style="display:flex; flex-direction:row;">
-        			<input id="PASSWORD_HINT_ANSWER" style="width:85%;" class="input" type="text" name="PASSWORD_HINT_ANSWER" placeholder="비밀번호 찾기 질문에 대한 답" autocomplete="off">
+        			<input id="PASSWORD_HINT_ANSWER" style="width:85%;" class="input" type="text" name="password_hint_answer" placeholder="비밀번호 찾기 질문에 대한 답" autocomplete="off">
             		<input id="FIND_PASSWORD_BUTTON" type="button" value="찾기">
         		</div>
         	</div>

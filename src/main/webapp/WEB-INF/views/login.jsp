@@ -19,7 +19,7 @@
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/sidebar.jsp"/>
-    <c:if test= "${sessionScope.CUSTOMER != null}">
+    <c:if test= "${sessionScope.customer != null}">
     	<script>
     		var form = $("<form action='${path}/customer/mainForm.do' method='post'></form>");
     		$("body").append(form);
@@ -28,8 +28,8 @@
     </c:if>
     <div id="container" style="overflow: scroll;">
         <form id="loginform" action="/LibraryService/login" method="post">
-            <input id="CUSTOMER_ID" class="input" type="text" name="CUSTOMER_ID" placeholder="아이디" autocomplete="off">
-            <input id="CUSTOMER_PW" class="input" type="password" name="CUSTOMER_PW" placeholder="비밀번호" autocomplete="off">
+            <input id="CUSTOMER_ID" class="input" type="text" name="customer_id" placeholder="아이디" autocomplete="off">
+            <input id="CUSTOMER_PW" class="input" type="password" name="customer_pw" placeholder="비밀번호" autocomplete="off">
             <input id="LOGIN_BUTTON" type="button" value="로그인">
             <div style="display: flex; flex-direction: row; width: 100%; flex: 1; margin-top:10px;">
                 <a href="${path}/customer/findForm.do">아이디/비밀번호 찾기</a>

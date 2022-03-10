@@ -22,6 +22,12 @@ import com.spring.LibraryService.encrypt.SHA;
 @Service("boardService")
 @Transactional(propagation=Propagation.REQUIRED,rollbackFor={Exception.class})
 public class BoardService {
+	/*
+
+
+
+
+
 	@Autowired
 	private BoardDAO boardDAO;
 	private static String REPOSITORY_PATH = "D:\\LibraryService\\board";
@@ -239,4 +245,9 @@ public class BoardService {
 		mav.addObject("BOARD", map.get("BOARD"));
 		return mav;
 	}
+	
+	
+	
+	
+	*/
 }

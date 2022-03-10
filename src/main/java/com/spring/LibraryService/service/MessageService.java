@@ -13,6 +13,11 @@ import com.spring.LibraryService.vo.MessageVO;
 @Service("messageService")
 @Transactional(propagation=Propagation.REQUIRED,rollbackFor={Exception.class})
 public class MessageService {
+	/*
+	 
+	 
+	 
+	 
 	@Autowired
 	private MessageDAO messageDAO;
 	
@@ -89,4 +94,10 @@ public class MessageService {
 	public MessageVO readMessage(HashMap info) {
 		return messageDAO.readMessage(info);
 	}
+	
+	
+	
+	
+	
+	*/
 }

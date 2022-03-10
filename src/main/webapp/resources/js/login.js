@@ -26,43 +26,35 @@ $(document).ready(function(){
 	//먼저 형식에 맞는지 확인후, 맞다면 서버로부터 공개키를 전달받음.
 	//============================================================================================
     $(document).on("click","#LOGIN_BUTTON",function(e){
-    	var CUSTOMER_ID = $("#CUSTOMER_ID").val();
-    	var CUSTOMER_PW = $("#CUSTOMER_PW").val();
-        if(!check(CUSTOMER_ID)||!check(CUSTOMER_PW)){
+    	var customer_id = $("#CUSTOMER_ID").val();
+    	var customer_pw = $("#CUSTOMER_PW").val();
+        if(!check(customer_id)||!check(customer_pw)){
         	alert("아이디와 비밀번호는 알파벳과 숫자로 8자리이상 16자리이하 입니다.");
-        }else{
-        	
-        	
-        	
-        	
+        }else{	
         	//============================================================================================
         	//서버로 부터 공개키를 전달받는데, 이에 대응되는 개인키는 서버의 세션에 저장되어있음.
         	//============================================================================================
         	$.ajax({
         		"url":"/LibraryService/customer/getPublicKey.do",
-        		"dataType":"text",
+        		"dataType":"json",
         		"type":"POST",
         		"success":function(result){
         			//백엔드 서버로부터 공개키를 전달받음.
-        			var PUBLICKEY = result;
+        			var publickey = result.publickey;
         			//전달받은 공개키로 RSA2048 암호화를 수행.
-        			CUSTOMER_PW = encryptByRSA2048(CUSTOMER_PW,PUBLICKEY);
+        			customer_pw = encryptByRSA2048(customer_pw,publickey);
                 	$.ajax({
                 		"url":"/LibraryService/customer/login.do",
                 		"type":"POST",
+                		"dataType":"json",
                 		"data":{
-                			"CUSTOMER_ID":CUSTOMER_ID,
-                			"CUSTOMER_PW":CUSTOMER_PW
+                			"customer_id":customer_id,
+                			"customer_pw":customer_pw
                 		},
                 		"success":function(result){
-                			if(result.FLAG=="FALSE"){
-                				alert(result.CONTENT);
-                			}else if(result.FLAG=="LOGON"){
-                				//이미 로그인 되어있다면 다시 로그인할 수 없도록 함.
-                				alert(result.CONTENT);
-                				var form = $("<form method='post' action='/LibraryService/customer/mainForm.do'></form>");
-                				$("body").append(form);
-                				form.submit();
+                			console.log(result);
+                			if(result.flag!="true"){
+                				alert(result.content);
                 			}else{
                 				//로그인 성공시에 메인화면으로 이동함.
                 				var form = $("<form method='post' action='/LibraryService/customer/mainForm.do'></form>");

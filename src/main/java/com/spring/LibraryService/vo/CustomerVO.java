@@ -2,85 +2,89 @@ package com.spring.LibraryService.vo;
 
 public class CustomerVO {
 
-	private String CUSTOMER_ID;
-	private String CUSTOMER_PW;
-	private String CUSTOMER_NAME;
-	private String CUSTOMER_PHONE;
-	private String CUSTOMER_EMAIL;
-	private String CUSTOMER_ADDRESS;
-	private String CUSTOMER_BDATE;
-	private int KIND_NUMBER;
-	private String SALT;
+	private String customer_id;
+	private String customer_pw;
+	private String customer_name;
+	private String customer_phone;
+	private String customer_email;
+	private String customer_address;
+	private String customer_bdate;
+	private int kind_number;
+	private String salt;
 	
 	public CustomerVO() {
 		
 	}
 	
-	public CustomerVO(String CUSTOMER_ID, String CUSTOMER_PW, String CUSTOMER_NAME, String CUSTOMER_PHONE,
-			String CUSTOMER_EMAIL, String CUSTOMER_ADDRESS, String CUSTOMER_BDATE, int KIND_NUMBER,String SALT) {
-		this.CUSTOMER_ID = CUSTOMER_ID;
-		this.CUSTOMER_PW = CUSTOMER_PW;
-		this.CUSTOMER_NAME = CUSTOMER_NAME;
-		this.CUSTOMER_PHONE = CUSTOMER_PHONE;
-		this.CUSTOMER_EMAIL = CUSTOMER_EMAIL;
-		this.CUSTOMER_ADDRESS = CUSTOMER_ADDRESS;
-		this.CUSTOMER_BDATE = CUSTOMER_BDATE;
-		this.KIND_NUMBER = KIND_NUMBER;
-		this.SALT = SALT;
+	public String getCustomer_id() {
+		return customer_id;
 	}
-	
-	public String getCUSTOMER_ID() {
-		return CUSTOMER_ID;
+
+	public void setCustomer_id(String customer_id) {
+		this.customer_id = customer_id;
 	}
-	public void setCUSTOMER_ID(String cUSTOMER_ID) {
-		this.CUSTOMER_ID = cUSTOMER_ID;
+
+	public String getCustomer_pw() {
+		return customer_pw;
 	}
-	public String getCUSTOMER_PW() {
-		return CUSTOMER_PW;
+
+	public void setCustomer_pw(String customer_pw) {
+		this.customer_pw = customer_pw;
 	}
-	public void setCUSTOMER_PW(String cUSTOMER_PW) {
-		this.CUSTOMER_PW = cUSTOMER_PW;
+
+	public String getCustomer_name() {
+		return customer_name;
 	}
-	public String getCUSTOMER_NAME() {
-		return CUSTOMER_NAME;
+
+	public void setCustomer_name(String customer_name) {
+		this.customer_name = customer_name;
 	}
-	public void setCUSTOMER_NAME(String cUSTOMER_NAME) {
-		this.CUSTOMER_NAME = cUSTOMER_NAME;
+
+	public String getCustomer_phone() {
+		return customer_phone;
 	}
-	public String getCUSTOMER_PHONE() {
-		return CUSTOMER_PHONE;
+
+	public void setCustomer_phone(String customer_phone) {
+		this.customer_phone = customer_phone;
 	}
-	public void setCUSTOMER_PHONE(String cUSTOMER_PHONE) {
-		this.CUSTOMER_PHONE = cUSTOMER_PHONE;
+
+	public String getCustomer_email() {
+		return customer_email;
 	}
-	public String getCUSTOMER_EMAIL() {
-		return CUSTOMER_EMAIL;
+
+	public void setCustomer_email(String customer_email) {
+		this.customer_email = customer_email;
 	}
-	public void setCUSTOMER_EMAIL(String cUSTOMER_EMAIL) {
-		this.CUSTOMER_EMAIL = cUSTOMER_EMAIL;
+
+	public String getCustomer_address() {
+		return customer_address;
 	}
-	public String getCUSTOMER_ADDRESS() {
-		return CUSTOMER_ADDRESS;
+
+	public void setCustomer_address(String customer_address) {
+		this.customer_address = customer_address;
 	}
-	public void setCUSTOMER_ADDRESS(String cUSTOMER_ADDRESS) {
-		this.CUSTOMER_ADDRESS = cUSTOMER_ADDRESS;
+
+	public String getCustomer_bdate() {
+		return customer_bdate;
 	}
-	public String getCUSTOMER_BDATE() {
-		return CUSTOMER_BDATE;
+
+	public void setCustomer_bdate(String customer_bdate) {
+		this.customer_bdate = customer_bdate;
 	}
-	public void setCUSTOMER_BDATE(String cUSTOMER_BDATE) {
-		this.CUSTOMER_BDATE = cUSTOMER_BDATE;
+
+	public int getKind_number() {
+		return kind_number;
 	}
-	public int getKIND_NUMBER() {
-		return KIND_NUMBER;
+
+	public void setKind_number(int kind_number) {
+		this.kind_number = kind_number;
 	}
-	public void setKIND_NUMBER(int kIND_NUMBER) {
-		this.KIND_NUMBER = kIND_NUMBER;
+
+	public String getSalt() {
+		return salt;
 	}
-	public String getSALT() {
-		return SALT;
-	}
-	public void setSALT(String SALT) {
-		this.SALT = SALT;
-	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}	
 }

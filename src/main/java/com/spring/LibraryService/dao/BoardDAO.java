@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository("boardDAO")
 public class BoardDAO {
+	/*
+	
+	
 	@Autowired
 	private SqlSession sqlSession;
 	
@@ -150,4 +153,8 @@ public class BoardDAO {
 	public void modifyArticle(HashMap map) throws Exception{
 		if(sqlSession.update("board.modifyArticle",map)==0) {throw new Exception();}
 	}
+	
+	
+	
+	*/
 }

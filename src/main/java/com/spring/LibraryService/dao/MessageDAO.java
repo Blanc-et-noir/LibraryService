@@ -11,6 +11,11 @@ import com.spring.LibraryService.vo.MessageVO;
 
 @Repository("messageDAO")
 public class MessageDAO {
+	
+	/*
+	
+	
+	
 	@Autowired
 	private SqlSession sqlSession;
 	
@@ -124,4 +129,12 @@ public class MessageDAO {
 			return null;
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	*/
 }

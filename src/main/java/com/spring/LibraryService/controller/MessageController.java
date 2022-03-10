@@ -20,6 +20,8 @@ import com.spring.LibraryService.vo.MessageVO;
 
 @Controller("message")
 public class MessageController {
+	/*
+	
 	@Autowired
 	private MessageService messageService;
 
@@ -177,4 +179,8 @@ public class MessageController {
 			}
 		}
 	}
+	
+	
+	
+	*/
 }

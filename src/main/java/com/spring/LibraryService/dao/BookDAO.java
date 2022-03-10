@@ -9,6 +9,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository("bookDAO")
 public class BookDAO {
+	
+	/*
+	
+	
+	
 	@Autowired
 	private SqlSession sqlSession;
 	
@@ -178,4 +183,9 @@ public class BookDAO {
 	public void sendMessage(HashMap param) throws Exception{
 		sqlSession.insert("book.sendMessage", param);
 	}
+	
+	
+	
+	
+	*/
 }

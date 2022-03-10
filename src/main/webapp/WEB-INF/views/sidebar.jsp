@@ -22,8 +22,8 @@
 			<div id="sideContent">
 		        <div id="myinfo">
             	<c:choose>
-            		<c:when test= "${sessionScope.CUSTOMER != null}">
-            			<div id="CUSTOMER_INFO">${sessionScope.CUSTOMER.CUSTOMER_NAME}</div>
+            		<c:when test= "${sessionScope.customer != null}">
+            			<div id="CUSTOMER_INFO">${sessionScope.customer.getCustomer_name()}</div>
 						<a id="logout" href="${path}/customer/logout.do">로그아웃</a>
             		</c:when>
             		<c:otherwise>
@@ -37,7 +37,7 @@
         	</div>
         	<div id="nav">
             	<a class="mainnav" href="${path}/customer/mainForm.do">홈 화면</a>
-            	<c:if test="${sessionScope.CUSTOMER !=null and sessionScope.CUSTOMER.getKIND_NUMBER()==0}">
+            	<c:if test="${sessionScope.customer !=null and sessionScope.customer.getKind_number()==0}">
 					<div id="mainnav1" class="mainnav active">사용자 관리</div>
             		<div class="subnav">
             			<!--<a class="option" href="${path}/book/checkOutForm.do">도서 대출</a>-->
@@ -54,14 +54,14 @@
            		</div>
             	<div id="mainnav3" class="mainnav active">커뮤니티</div>
             	<div class="subnav">
-                	<a class="option" href="${path}/board/boardForm.do?BOARD=free_board">자유게시판</a>
-                	<a class="option" href="${path}/board/boardForm.do?BOARD=info_board">정보게시판</a>
-                	<c:if test="${sessionScope.CUSTOMER !=null}">
+                	<a class="option" href="${path}/board/boardForm.do?board=free_board">자유게시판</a>
+                	<a class="option" href="${path}/board/boardForm.do?board=info_board">정보게시판</a>
+                	<c:if test="${sessionScope.customer !=null}">
                 		<a class="option" href="${path}/message/sendMessageForm.do">메세지 보내기</a>
                 		<a class="option" href="${path}/message/receiveMessageForm.do">메세지 보관함</a>
                 	</c:if>
             	</div>
-            		<c:if test="${sessionScope.CUSTOMER !=null}">
+            		<c:if test="${sessionScope.customer !=null}">
             			<div id="mainnav4" class="mainnav active">내 정보</div>
             			<div class="subnav">
                 			<a class="option">대출 현황</a>
@@ -70,7 +70,7 @@
             		</c:if>
             	<div id="mainnav5" class="mainnav active">기타</div>
             	<div class="subnav">
-					<a class="option" href="${path}/board/boardForm.do?BOARD=qna_board">문의게시판</a>
+					<a class="option" href="${path}/board/boardForm.do?board=qna_board">문의게시판</a>
             		<a class="option">서비스정보</a>
             	</div>
         	</div>

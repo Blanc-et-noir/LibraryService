@@ -73,14 +73,17 @@ $(document).ready(function(){
     	"type":"POST",
     	"url":"/LibraryService/customer/getPasswordQuestionList.do",
     	"dataType":"json",
-    	"success":function(arr){
-    		for(var i=0; i<arr.length; i++){
-    			$("#PASSWORD_QUESTION_LIST_ID").append("<option class='passwordQuestionList' value='"+arr[i].PASSWORD_QUESTION_LIST_ID+"'>"+arr[i].PASSWORD_QUESTION_LIST_CONTENT+"</option>");
+    	"success":function(result){
+    		var list = result.list;
+    		console.log(list);
+    		for(var i=0; i<list.length; i++){
+    			$("#PASSWORD_QUESTION_LIST_ID").append("<option class='passwordQuestionList' value='"+list[i].password_question_list_id+"'>"+list[i].password_question_list_content+"</option>");
     		}
     	},
-    	"error":function(){
-    		alert("error");
-    	}
+		"error": function(xhr, status, error) {
+			  var err = JSON.parse(xhr.responseText);
+			  alert(err.content);
+  		}
     });
     
     
@@ -97,14 +100,15 @@ $(document).ready(function(){
     		"dataType":"JSON",
     		"type":"POST",
     		"data":{
-    			"CUSTOMER_EMAIL":$("#CUSTOMER_EMAIL").val()
+    			"customer_email":$("#CUSTOMER_EMAIL").val()
     		},
     		"success":function(result){
-    			alert(result.CONTENT);
+    			alert(result.content);
     		},
-    		"error":function(){
-    			alert("에러");
-    		}
+    		"error": function(xhr, status, error) {
+    			  var err = JSON.parse(xhr.responseText);
+    			  alert(err.content);
+      		}
     	})
     })
     
@@ -121,13 +125,14 @@ $(document).ready(function(){
     		"dataType":"JSON",
     		"type":"POST",
     		"data":{
-    			"EMAIL_AUTHCODE":$("#EMAIL_AUTHCODE").val()
+    			"email_authcode":$("#EMAIL_AUTHCODE").val()
     		},
     		"success":function(result){
-    			alert(result.CONTENT);
+    			alert(result.content);
     		},
-    		"error":function(){
-    			alert("에러");
+    		"error": function(xhr, status, error) {
+    			  var err = JSON.parse(xhr.responseText);
+    			  alert(err.content);
     		}
     	})
     })
@@ -140,35 +145,35 @@ $(document).ready(function(){
     //회원가입 버튼을 클릭하면 회원가입을 백엔드 서버에 요청하는 메소드.
     //============================================================================================
     $(document).on("click","#JOIN_BUTTON",function(){
-    	var CUSTOMER_ID = $("#CUSTOMER_ID").val();
-    	var CUSTOMER_PW = $("#CUSTOMER_PW").val();
-    	var CUSTOMER_PW_CHECK = $("#CUSTOMER_PW_CHECK").val();
-    	var CUSTOMER_NAME = $("#CUSTOMER_NAME").val();
-    	var CUSTOMER_PHONE = $("#CUSTOMER_PHONE").val();
-    	var CUSTOMER_EMAIL = $("#CUSTOMER_EMAIL").val();
-    	var CUSTOMER_ADDRESS = $("#CUSTOMER_ADDRESS").val();
-    	var CUSTOMER_BDATE = $("#CUSTOMER_BDATE").val();
+    	var customer_id = $("#CUSTOMER_ID").val();
+    	var customer_pw = $("#CUSTOMER_PW").val();
+    	var customer_pw_check = $("#CUSTOMER_PW_CHECK").val();
+    	var customer_name = $("#CUSTOMER_NAME").val();
+    	var customer_phone = $("#CUSTOMER_PHONE").val();
+    	var customer_email = $("#CUSTOMER_EMAIL").val();
+    	var customer_address = $("#CUSTOMER_ADDRESS").val();
+    	var customer_bdate = $("#CUSTOMER_BDATE").val();
     	
     	//KIND_NUMBER가 0이면 관리자, 1이면 고객임.
-    	var KIND_NUMBER = $("#KIND_NUMBER").val();
-		var PASSWORD_QUESTION_LIST_ID = $("#PASSWORD_QUESTION_LIST_ID").val();
-		var PASSWORD_HINT_ANSWER = $("#PASSWORD_HINT_ANSWER").val();
+    	var kind_number = $("#KIND_NUMBER").val();
+		var password_question_list_id = $("#PASSWORD_QUESTION_LIST_ID").val();
+		var password_hint_answer = $("#PASSWORD_HINT_ANSWER").val();
     
-		if(!check(CUSTOMER_ID)){
+		if(!check(customer_id)){
 			alert("아이디는 알파벳과 숫자로 8자리이상 16자리이하로 구성해야 합니다.");
-		}else if(!check(CUSTOMER_PW)){
+		}else if(!check(customer_pw)){
     		alert("비밀번호는 알파벳과 숫자로 8자리이상 16자리이하로 구성해야 합니다.");
-    	}else if(CUSTOMER_PW != CUSTOMER_PW_CHECK){
+    	}else if(customer_pw != customer_pw_check){
 			alert("비밀번호가 서로 일치하지 않습니다.");
-    	}else if(PASSWORD_HINT_ANSWER.length == 0){
+    	}else if(password_hint_answer.length == 0){
     		alert("비밀번호 찾기 질문에 대한 답은 공백일 수 없습니다.");
-    	}else if(CUSTOMER_NAME.length == 0){
+    	}else if(customer_name.length == 0){
     		alert("이름은 공백일 수 없습니다.");
-    	}else if(!checkPhone(CUSTOMER_PHONE)){
+    	}else if(!checkPhone(customer_phone)){
     		alert("전화번호 형식이 잘못되었습니다.");
-    	}else if(!checkEmail(CUSTOMER_EMAIL)){
+    	}else if(!checkEmail(customer_email)){
     		alert("이메일 형식이 잘못되었습니다.");
-    	}else if(CUSTOMER_ADDRESS.length == 0){
+    	}else if(customer_address.length == 0){
     		alert("주소는 공백일 수 없습니다.");
     	}else{
     		
@@ -180,17 +185,17 @@ $(document).ready(function(){
     		//============================================================================================
         	$.ajax({
         		"url":"/LibraryService/customer/getPublicKey.do",
-        		"dataType":"text",
+        		"dataType":"json",
         		"type":"POST",
         		"success":function(result){
         			
-        			
+        			console.log(result);
         			
         			
         			//전달받은 공개키로 비밀번호와 비밀번호 찾기 질문에 대한 답을 암호화 함.
-        			var PUBLICKEY = result;
-            		CUSTOMER_PW = encryptByRSA2048(CUSTOMER_PW,PUBLICKEY);
-            		PASSWORD_HINT_ANSWER = encryptByRSA2048(PASSWORD_HINT_ANSWER,PUBLICKEY);
+        			var publickey = result.publickey;
+            		customer_pw = encryptByRSA2048(customer_pw,publickey);
+            		password_hint_answer = encryptByRSA2048(password_hint_answer,publickey);
             		
             		
             		
@@ -202,42 +207,39 @@ $(document).ready(function(){
             		$.ajax({
             			"type":"POST",
             			"url":"/LibraryService/customer/join.do",
-            			"dataType":"JSON",
+            			"dataType":"json",
             			"data":{
-            				"CUSTOMER_ID":CUSTOMER_ID,
-            				"CUSTOMER_PW":CUSTOMER_PW,
-            				"CUSTOMER_NAME":CUSTOMER_NAME,
-            				"CUSTOMER_PHONE":CUSTOMER_PHONE,
-            				"CUSTOMER_EMAIL":CUSTOMER_EMAIL,
-            				"CUSTOMER_ADDRESS":CUSTOMER_ADDRESS,
-            				"CUSTOMER_BDATE":CUSTOMER_BDATE,
-            				"KIND_NUMBER":"1",
-            				"PASSWORD_QUESTION_LIST_ID":PASSWORD_QUESTION_LIST_ID,
-            				"PASSWORD_HINT_ANSWER":PASSWORD_HINT_ANSWER
+            				"customer_id":customer_id,
+            				"customer_pw":customer_pw,
+            				"customer_name":customer_name,
+            				"customer_phone":customer_phone,
+            				"customer_email":customer_email,
+            				"customer_address":customer_address,
+            				"customer_bdate":customer_bdate,
+            				"password_question_list_id":password_question_list_id,
+            				"password_hint_answer":password_hint_answer
             			},
             			"success":function(result){
-            				if(result.FLAG=="TRUE"){
+            				console.log(result);
+            				if(result.flag=="true"){
             					alert("회원가입에 성공했습니다.");
                 				var form = $("<form method='post' action='/LibraryService/customer/mainForm.do'></form>");
                 				$("body").append(form);
                 				form.submit();
-            				}else if(result.FLAG=="LOGON"){
-                				alert("이미 로그인 상태입니다.");
-                				var form = $("<form method='post' action='/LibraryService/customer/mainForm.do'></form>");
-                				$("body").append(form);
-                				form.submit();
             				}else{
-            					alert(result.CONTENT);
+            					alert(result.content);
             				}
             			},
-            			"error":function(){
-            				alert("에러");
-            			}
+                		"error": function(xhr, status, error) {
+              			  var err = JSON.parse(xhr.responseText);
+              			  alert(err.content);
+                		}
             		});
         		},
-        		"error":function(){
-        			console.log("에러");
-        		}
+        		"error": function(xhr, status, error) {
+        			  var err = JSON.parse(xhr.responseText);
+        			  alert(err.content);
+          		}
         	});
         }
     });    
