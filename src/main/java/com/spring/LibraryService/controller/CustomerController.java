@@ -238,8 +238,11 @@ public class CustomerController {
 	public ResponseEntity<HashMap> LOGOFFMAP_find(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
 		HashMap result = new HashMap();
 		HttpSession session = request.getSession(true);
+		
 		String flag = param.get("flag");
+		
 		//flag변수에 따라 서로다른 처리를 수행함.
+		
 		try {
 			if(flag.equals("find_by_phone")) {
 				return customerService.findByPhone(param);
