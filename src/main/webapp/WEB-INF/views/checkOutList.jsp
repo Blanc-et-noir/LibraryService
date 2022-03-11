@@ -21,11 +21,11 @@
     <div id="container" style="overflow: scroll;">
     	<div>
     		<div id="panel">
-    			<select id="FLAG" name="flag">
-    				<option value="CUSTOMER_ID" selected>사용자 ID</option>
-    				<option value="CUSTOMER_NAME">사용자 이름</option>
-    				<option value="BOOK_ISBN">ISBN 코드</option>
-    				<option value="BOOK_NAME">책 제목</option>
+    			<select id="flag" name="flag">
+    				<option value="customer_id" selected>사용자 ID</option>
+    				<option value="customer_name">사용자 이름</option>
+    				<option value="book_isbn">ISBN 코드</option>
+    				<option value="book_name">책 제목</option>
     			</select>
     			<input id="START_DATE" type="date">
     			<p class="sub" style="width:60px"> ~ </p>

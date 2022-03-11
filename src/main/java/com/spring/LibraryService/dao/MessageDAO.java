@@ -10,12 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.spring.LibraryService.vo.MessageVO;
 
 @Repository("messageDAO")
-public class MessageDAO {
-	
-	/*
-	
-	
-	
+public class MessageDAO implements MessageDAOInterface{
 	@Autowired
 	private SqlSession sqlSession;
 	
@@ -27,8 +22,10 @@ public class MessageDAO {
 	//============================================================================================
 	//송신 메세지함에 메세지를 추가하는 메소드.
 	//============================================================================================
-	public void sendMessageSent(HashMap<String,String> info) throws Exception{
-		if(sqlSession.insert("message.sendMessageSent", info)==0) {throw new Exception();}
+	public void sendMessageSent(HashMap<String,String> param) throws Exception{
+		if(sqlSession.insert("message.sendMessageSent", param)==0) {
+			throw new Exception();
+		}
 	}
 	
 	
@@ -38,8 +35,10 @@ public class MessageDAO {
 	//============================================================================================
 	//수신 메세지함에 메세지를 추가하는 메소드.
 	//============================================================================================
-	public void sendMessageReceived(HashMap<String,String> info) throws Exception{
-		if(sqlSession.insert("message.sendMessageReceived", info)==0) {throw new Exception();}
+	public void sendMessageReceived(HashMap<String,String> param) throws Exception{
+		if(sqlSession.insert("message.sendMessageReceived", param)==0) {
+			throw new Exception();
+		}
 	}
 	
 	
@@ -50,25 +49,25 @@ public class MessageDAO {
 	//============================================================================================
 	//메세지 목록을 읽는 요청을 처리하는 메소드.
 	//============================================================================================
-	public List receiveMessage(HashMap<String,String> info) {
-		try {
-			//수신 메세지함의 메세지를 읽을때는 수신자의 ID가 자기자신이어야함.
-			//송신자의 ID는 자신이 검색하고자 하는 ID임.
-			if(info.get("MESSAGE_BOX").equals("MESSAGE_RECEIVED")) {
-				info.put("OWNER_ID", "RECEIVER_ID");
-				info.put("TARGET_ID", "SENDER_ID");
-			}else {
-				//송신 메세지함의 메세지를 읽을때는 송신자의 ID가 자기자신이어야함.
-				//수신자의 ID는 자신이 검색하고자 하는 ID임.
-				info.put("OWNER_ID", "SENDER_ID");
-				info.put("TARGET_ID", "RECEIVER_ID");
-			}
-			List list = sqlSession.selectList("message.receiveMessage", info);
-			return list;
-		}catch(Exception e) {
-			e.printStackTrace();
-			return null;
+	public List receiveMessage(HashMap<String,String> param) throws Exception{
+		List list = null;
+		//수신 메세지함의 메세지를 읽을때는 수신자의 ID가 자기자신이어야함.
+		//송신자의 ID는 자신이 검색하고자 하는 ID임.
+		if(param.get("message_box").equals("message_received")) {
+			param.put("owner_id", "receiver_id");
+			param.put("target_id", "sender_id");
+		}else {
+			//송신 메세지함의 메세지를 읽을때는 송신자의 ID가 자기자신이어야함.
+			//수신자의 ID는 자신이 검색하고자 하는 ID임.
+			param.put("owner_id", "sender_id");
+			param.put("target_id", "receiver_id");
 		}
+		
+		if((list=sqlSession.selectList("message.receiveMessage", param))==null){
+			throw new Exception();
+		}
+		
+		return list;
 	}
 	
 	
@@ -79,20 +78,19 @@ public class MessageDAO {
 	//============================================================================================
 	//검색조건에 맞는 메세지들의 개수를 반환하는 메소드.
 	//============================================================================================
-	public int getMessageCount(HashMap<String,String> info) {
-		try {
-			if(info.get("MESSAGE_BOX").equals("MESSAGE_RECEIVED")) {
-				info.put("OWNER_ID", "RECEIVER_ID");
-				info.put("TARGET_ID", "SENDER_ID");
-			}else {
-				info.put("OWNER_ID", "SENDER_ID");
-				info.put("TARGET_ID", "RECEIVER_ID");
-			}
-			return sqlSession.selectOne("message.getMessageCount",info);
-		}catch(Exception e) {
-			e.printStackTrace();
-			return 0;
+	public int getMessageCount(HashMap<String,String> param) throws Exception{
+		int total = 0;
+		if(param.get("message_box").equals("message_received")) {
+			param.put("owner_id", "receiver_id");
+			param.put("target_id", "sender_id");
+		}else {
+			param.put("owner_id", "sender_id");
+			param.put("target_id", "receiver_id");
 		}
+		if((total=sqlSession.selectOne("message.getMessageCount",param))==0) {
+			throw new Exception();
+		}
+		return total;
 	}
 	
 	
@@ -103,8 +101,10 @@ public class MessageDAO {
 	//============================================================================================
 	//메세지들을 삭제하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public void deleteMessage(HashMap info) throws Exception{
-		if(sqlSession.delete("message.deleteMessage", info)==0) {throw new Exception();}
+	public void deleteMessage(HashMap param) throws Exception{
+		if(sqlSession.delete("message.deleteMessage", param)==0) {
+			throw new Exception();
+		}
 	}
 	
 	
@@ -115,19 +115,12 @@ public class MessageDAO {
 	//============================================================================================
 	//메세지를 읽는 요청을 처리하는 메소드.
 	//============================================================================================
-	public MessageVO readMessage(HashMap<String,String> info) {
-		try {
-			if(info.get("MESSAGE_BOX").equals("MESSAGE_RECEIVED")) {
-				info.put("OWNER_ID", "RECEIVER_ID");
-				return (MessageVO)sqlSession.selectOne("message.readMessage", info);
-			}else {
-				info.put("OWNER_ID", "SENDER_ID");
-				return (MessageVO)sqlSession.selectOne("message.readMessage", info);
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-			return null;
+	public MessageVO readMessage(HashMap<String,String> param) throws Exception{
+		MessageVO message = null;
+		if((message=sqlSession.selectOne("message.readMessage", param))==null) {
+			throw new Exception();
 		}
+		return message;
 	}
 	
 	
@@ -136,5 +129,5 @@ public class MessageDAO {
 	
 	
 	
-	*/
+	
 }

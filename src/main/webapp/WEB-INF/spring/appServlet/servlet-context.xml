@@ -39,4 +39,39 @@
 	<context:component-scan base-package="com.spring.LibraryService" />
 	<mvc:annotation-driven />
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/customer/infoForm.do"/>
+			<mvc:mapping path="/customer/logout.do"/>
+			<mvc:mapping path="/customer/changePassword.do"/>
+			<mvc:mapping path="/customer/changeOther.do"/>
+			
+			<mvc:mapping path="/message/sendMessageForm.do"/>
+			<mvc:mapping path="/message/receiveMessageForm.do"/>
+			<mvc:mapping path="/message/readMessage.do"/>
+			<mvc:mapping path="/message/sendMessage.do"/>
+			<mvc:mapping path="/message/receiveMessage.do"/>
+			<mvc:mapping path="/message/deleteMessage.do"/>
+			
+			<mvc:mapping path="/book/listCheckOutForm.do"/>
+			<mvc:mapping path="/book/checkOut.do"/>
+			<mvc:mapping path="/book/returnBook.do"/>
+			<mvc:mapping path="/book/renewBook.do"/>
+			<mvc:mapping path="/book/listCheckOuts.do"/>
+			<mvc:mapping path="/book/sendMessage.do"/>
+			
+			<beans:bean class="com.spring.LibraryService.interceptor.LoginInterceptor"></beans:bean>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/customer/loginForm.do"/>
+			<mvc:mapping path="/customer/joinForm.do"/>
+			<mvc:mapping path="/customer/findForm.do"/>
+			<mvc:mapping path="/customer/login.do"/>
+			
+			<mvc:mapping path="/customer/join.do"/>
+			<mvc:mapping path="/customer/find.do"/>
+			
+			<beans:bean class="com.spring.LibraryService.interceptor.LogoutInterceptor"></beans:bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
 </beans:beans>

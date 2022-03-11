@@ -222,7 +222,7 @@ $(document).ready(function(){
             			"success":function(result){
             				console.log(result);
             				if(result.flag=="true"){
-            					alert("회원가입에 성공했습니다.");
+            					alert(result.content);
                 				var form = $("<form method='post' action='/LibraryService/customer/mainForm.do'></form>");
                 				$("body").append(form);
                 				form.submit();

@@ -40,16 +40,16 @@
 .subtitle{
 	color:var(--c5);
 }
-#EMAIL{
+#email{
 	display:flex;
 }
-#EMAIL input{
+#email input{
 	width:50%;
 	height:30px;
 	color:var(--c8);
 	background-color:transparent;
 }
-#EMAIL input:hover{
+#email input:hover{
 	color:var(--c2);
 }
 

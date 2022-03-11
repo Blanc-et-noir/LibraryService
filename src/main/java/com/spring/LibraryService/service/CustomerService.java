@@ -26,7 +26,7 @@ public class CustomerService implements CustomerServiceInterface{
 	@Autowired
 	private CustomerDAOInterface customerDAO;
 	@Autowired
-	private MailService mailService;
+	private MailServiceInterface mailService;
 	
 	
 	
@@ -89,8 +89,7 @@ public class CustomerService implements CustomerServiceInterface{
 	public ResponseEntity<HashMap> findByPhone(HashMap<String,String> param) throws Exception{
 		HashMap result = new HashMap();
 		result.put("flag", "true");
-		result.put("content", "아이디 조회 성공");
-		result.put("password_question", customerDAO.findByPhone(param));
+		result.put("content", "아이디 조회 성공 : "+customerDAO.findByPhone(param));
 		return new ResponseEntity<HashMap>(result,HttpStatus.OK);
 	}
 	
@@ -105,8 +104,7 @@ public class CustomerService implements CustomerServiceInterface{
 	public ResponseEntity<HashMap> findByEmail(HashMap<String,String> param) throws Exception{
 		HashMap result = new HashMap();
 		result.put("flag", "true");
-		result.put("content", "아이디 조회 성공");
-		result.put("password_question", customerDAO.findByEmail(param));
+		result.put("content", "아이디 조회 성공 : "+customerDAO.findByEmail(param));
 		return new ResponseEntity<HashMap>(result,HttpStatus.OK);
 	}
 	
@@ -134,36 +132,41 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//비밀번호 찾기 질문에 대한 답을 검증하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public ResponseEntity<HashMap> validateAnswer(HashMap<String,String> param) throws Exception{
+	public ResponseEntity<HashMap> validateAnswer(HashMap<String,String> param,HttpServletRequest request) throws Exception{
 		HashMap result = new HashMap();
+		HttpSession session = request.getSession();
 		
 		//사용자의 솔트값을 이용해 공백이 제거된 비밀번호 찾기 질문에 대한 답을 SHA512로 더블 해싱함.
 		//해싱된 결과와 DB에 저장된 비밀번호 찾기 질문에 대한 답이 일치해야 검증에 성공.
+		String privatekey = (String) session.getAttribute("privatekey");
 		String salt = customerDAO.getSalt(param);
-
-		param.put("password_hint_answer", SHA.DSHA512(param.get("password_hint_answer").replace(" ", ""), salt));
-
-		//검증에 성공하면 무작위 솔트 값 2개를 이용하여 더블 해싱한 결과 16자리를 임시 비밀번호로써 사용함. 
-		String customer_pw = SHA.DSHA512(SHA.getSalt(),SHA.getSalt()).substring(0,16);
+		String password_hint_answer = SHA.DSHA512((RSA2048.decrypt(param.get("password_hint_answer"), privatekey)).replaceAll(" ", ""),salt);
 		String customer_id = param.get("customer_id");
+		
+		//검증에 성공하면 무작위 솔트 값 2개를 이용하여 더블 해싱한 결과 16자리를 임시 비밀번호로써 사용함. 
 
-		customerDAO.validateAnswer(param);
+		param.put("customer_id", customer_id);
+		param.put("password_hint_answer", password_hint_answer);
+		
+		String customer_email = customerDAO.validateAnswer(param);
 		//해당 임시 비밀번호로 사용자의 비밀번호를 변경하고, 솔트값을 새로 설정함.
 		//사용자가 가입할때 사용한 이메일 주소로 임시 비밀번호를 전달함.
+		
+		String customer_pw = SHA.DSHA512(SHA.getSalt(),SHA.getSalt()).substring(0,16);
 		
 		param.put("customer_pw", SHA.DSHA512(customer_pw, salt));
 		param.put("salt", salt);
 		
 		customerDAO.changePassword(param);
 		
-		param.put("to", param.get("customer_email"));
+		param.put("to", customer_email);
 		param.put("subject", "임시 비밀번호");
 		param.put("text", customer_id+"에 대한 임시 비밀번호는 "+customer_pw+" 입니다.");
 		
-		//mailService.sendMail(param);
+		mailService.sendMail(param);
 		
 		result.put("flag", "true");
-		result.put("content", param.get("customer_email")+"으로 임시비밀번호를 전송했습니다.");
+		result.put("content", customer_email+"으로 임시비밀번호를 전송했습니다.");
 		return new ResponseEntity<HashMap>(result,HttpStatus.OK); 
 	}
 	
@@ -177,12 +180,13 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	public ResponseEntity<HashMap> changePassword(HashMap<String,String> param, HttpServletRequest request) throws Exception{
 		HashMap result = new HashMap();
-		HttpSession session = request.getSession(true);
-		CustomerVO customerVO = (CustomerVO) session.getAttribute("customer");
-		
+		HttpSession session = request.getSession();
+		String privatekey = (String)session.getAttribute("privatekey");
+		String salt = customerDAO.getSalt(param);		
+		String customer_pw_new = param.get("customer_pw");
 		//솔트 값을 얻어서 해당 솔트 값으로 기존 비밀번호를 SHA512로 더블 해싱한 결과가 DB에 저장된 더블 해싱된 비밀번호와 일치해야 비밀번호 변경함. 
-		String salt = customerVO.getSalt();
-		param.put("customer_pw", SHA.DSHA512(param.get("customer_pw_old"), salt));
+		
+		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(param.get("customer_pw_old"), privatekey).replace(" ", ""), salt));
 		customerDAO.validatePassword(param);
 		
 		String newSalt = SHA.getSalt();
@@ -193,11 +197,11 @@ public class CustomerService implements CustomerServiceInterface{
 		//보안상 복호화가 불가능해야함.
 		
 		param.put("salt", newSalt);
-		param.put("customer_pw", SHA.DSHA512(param.get("customer_pw"), newSalt));
-		
+		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(customer_pw_new, privatekey).replace(" ", ""), newSalt));
 		customerDAO.changePassword(param);
+
 		
-		param.put("password_hint_answer", SHA.DSHA512(param.get("password_hint_answer").replace(" ", ""),newSalt));
+		param.put("password_hint_answer", SHA.DSHA512(RSA2048.decrypt(param.get("password_hint_answer").replace(" ", ""), privatekey),newSalt));
 		customerDAO.changePasswordHint(param);
 		
 		session.invalidate();
@@ -217,7 +221,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	public ResponseEntity<HashMap> changeOther(HashMap<String,String> param, HttpServletRequest request) throws Exception{
 		HashMap result = new HashMap();
-		HttpSession session = request.getSession(true);
+		HttpSession session = request.getSession();
 		
 		//이메일 인증코드를 발급받지 않았거나, 아직 이메일 인증이 되지 않은 경우 이메일 인증을 요청함.
 		if(session.getAttribute("email_authcode") == null || session.getAttribute("email_authflag") == null || session.getAttribute("temp_email") == null){
@@ -235,7 +239,8 @@ public class CustomerService implements CustomerServiceInterface{
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 		
 		}else {
-
+			CustomerVO customer = (CustomerVO)session.getAttribute("customer");
+			param.put("customer_id", customer.getCustomer_id());
 			customerDAO.changeOther(param);
 			
 			//기타 정보 변경에 성공하면 세션을 강제로 종료함
@@ -258,7 +263,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	public ResponseEntity<HashMap> authenticateEmail(HttpServletRequest request) throws Exception{
 		HashMap result = new HashMap();
-		HttpSession session = request.getSession(true);
+		HttpSession session = request.getSession();
 		
 		//이메일 인증 코드를 발급받지 않았으면 인증코드 발급을 요청함.
 		if(session.getAttribute("email_authcode") == null){
@@ -275,6 +280,7 @@ public class CustomerService implements CustomerServiceInterface{
 				result.put("flag", "true");
 				result.put("content", "이메일 인증에 성공했습니다.");
 				session.setAttribute("email_authflag", "true");
+				session.setAttribute("email_authcode", null);
 				return new ResponseEntity<HashMap>(result,HttpStatus.OK);
 			}else {
 				result.put("flag", "false");

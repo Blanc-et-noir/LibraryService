@@ -47,7 +47,7 @@ public class CustomerController {
 	//로그인 화면 뷰를 리턴하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/customer/loginForm.do")
-	public ModelAndView LOGOFFMAV_loginForm(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView loginForm(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("login");
 	}
 	
@@ -60,7 +60,7 @@ public class CustomerController {
 	//회원가입 화면 뷰를 리턴하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/customer/joinForm.do")
-	public ModelAndView LOGOFFMAV_joinForm(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView joinForm(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("join");
 	}
 	
@@ -73,7 +73,7 @@ public class CustomerController {
 	//아이디, 비밀번호 찾기 화면 뷰를 리턴하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/customer/findForm.do")
-	public ModelAndView LOGOFFMAV_findForm(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView findForm(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("find");
 	}
 	
@@ -86,7 +86,7 @@ public class CustomerController {
 	//사용자 정보 변경 화면 뷰를 리턴하는 메소드
 	//============================================================================================
 	@RequestMapping(value= {"/customer/infoForm.do"})
-	public ModelAndView LOGONMAV_infoForm(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView infoForm(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("info");
 	}
 	
@@ -99,8 +99,7 @@ public class CustomerController {
 	//사용자의 로그인 요청을 처리하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/customer/login.do")
-	@ResponseBody
-	public ResponseEntity<HashMap> LOGOFFMAP_login(@RequestParam HashMap param, HttpServletRequest request) {
+	public ResponseEntity<HashMap> login(@RequestParam HashMap param, HttpServletRequest request) {
 		HashMap result = new HashMap();
 		try {
 			HttpSession session = request.getSession();
@@ -141,21 +140,22 @@ public class CustomerController {
 	//사용자의 회원가입 요청을 처리하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/customer/join.do")
-	public ResponseEntity<HashMap> LOGOFFMAP_join(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
+	public ResponseEntity<HashMap> join(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
 		HashMap<String,String> result = new HashMap<String,String>();
 		HttpSession session = request.getSession(true);
 		CustomerVO customer = (CustomerVO) session.getAttribute("customer");
 		
 		//아직 이메일 인증코드를 발급받지 않았거나 이메일 인증이 완료되지 않았는데 회원가입을 시도할때 다시 인증을 요청.
-		if(session.getAttribute("email_authcode") == null || session.getAttribute("email_authflag")==null || session.getAttribute("temp_email") == null){
+		if(session.getAttribute("email_authflag")==null || session.getAttribute("temp_email") == null){
 			result.put("flag", "false");
 			result.put("content", "이메일 인증을 완료해야 합니다.");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 		//이메일 인증은 완료했으나, 이메일 인증후 다시 다른 인증되지 않은 이메일로 회원가입을 신청하면 다시 인증을 요청.
 		}else if(!((String)session.getAttribute("temp_email")).equals(param.get("customer_email"))){
-			result.put("flag", "false");
+			result.put("flag", "false");			
 			result.put("content", "변경된 이메일에 대한 인증을 다시해야 합니다.");
 			session.removeAttribute("email_authcode");
+			session.removeAttribute("email_authflag");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 		}else {
 			try {
@@ -190,12 +190,12 @@ public class CustomerController {
 	//사용자가 공개키를 요청하면 공개키를 발급하고, 그에 대응되는 비밀키는 세션에 저장하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/customer/getPublicKey.do")
-	@ResponseBody
-	public ResponseEntity<HashMap> getPublicKey(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<HashMap> getPublicKey(HttpServletRequest request) {
 		HashMap result = new HashMap();
 		try {
 			return new ResponseEntity<HashMap>(customerService.getPublicKey(request),HttpStatus.OK);
 		}catch(Exception e) {
+			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "공개키 발급 실패");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
@@ -212,7 +212,7 @@ public class CustomerController {
 	//동적으로 DB에서 직접 얻고 이를 비동기식 JSON 타입으로 리턴함.
 	//============================================================================================
 	@RequestMapping(value="/customer/getPasswordQuestionList.do")
-	public ResponseEntity<HashMap> getPasswordQuestionList(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<HashMap> getPasswordQuestionList(HttpServletRequest request) {
 		HashMap result = new HashMap();
 		try {
 			result.put("flag", "true");
@@ -235,7 +235,7 @@ public class CustomerController {
 	//사용자의 아이디, 비밀번호 등을 찾을 수 있도록 처리하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/customer/find.do")
-	public ResponseEntity<HashMap> LOGOFFMAP_find(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
+	public ResponseEntity<HashMap> find(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
 		HashMap result = new HashMap();
 		HttpSession session = request.getSession(true);
 		
@@ -243,20 +243,38 @@ public class CustomerController {
 		
 		//flag변수에 따라 서로다른 처리를 수행함.
 		
-		try {
-			if(flag.equals("find_by_phone")) {
+		if(flag.equals("find_by_phone")) {
+			try {
 				return customerService.findByPhone(param);
-			}else if(flag.equals("find_by_email")) {
-				return customerService.findByEmail(param);
-			}else if(flag.equals("get_question_button")) {
-				return customerService.getPasswordQuestion(param);
-			}else {
-				return customerService.validateAnswer(param);
+			}catch(Exception e) {
+				result.put("flag", "false");
+				result.put("content", "회원정보 없음");
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}
-		}catch(Exception e) {
-			result.put("flag", "false");
-			result.put("content", "정보 변경 또는 조회에 실패했습니다");
-			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+		}else if(flag.equals("find_by_email")) {
+			try {
+				return customerService.findByEmail(param);
+			}catch(Exception e) {
+				result.put("flag", "false");
+				result.put("content", "회원정보 없음");
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}
+		}else if(flag.equals("get_question_button")) {
+			try {
+				return customerService.getPasswordQuestion(param);
+			}catch(Exception e) {
+				result.put("flag", "false");
+				result.put("content", "회원정보 없음");
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}
+		}else {
+			try {
+				return customerService.validateAnswer(param,request);
+			}catch(Exception e) {
+				result.put("flag", "false");
+				result.put("content", "오답");
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}
 		}
 	}
 	
@@ -269,11 +287,12 @@ public class CustomerController {
 	//비밀번호 변경 요청을 처리하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/customer/changePassword.do")
-	public ResponseEntity<HashMap> LOGONMAP_changePassword(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
+	public ResponseEntity<HashMap> changePassword(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
 		HashMap result = new HashMap();
 		try {
 			return customerService.changePassword(param, request);
 		}catch(Exception e) {
+			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "회원정보 변경에 실패했습니다.");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
@@ -289,11 +308,12 @@ public class CustomerController {
 	//기타 정보 변경 요청을 처리하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/customer/changeOther.do")
-	public ResponseEntity<HashMap> LOGONMAP_changeOther(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
+	public ResponseEntity<HashMap> changeOther(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
 		HashMap result = new HashMap();
 		try {
 			return customerService.changeOther(param,request);
 		}catch(Exception e) {
+			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "회원정보 변경에 실패했습니다.");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);

@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,15 +15,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.LibraryService.encrypt.SHA;
-import com.spring.LibraryService.service.MailService;
+import com.spring.LibraryService.service.MailServiceInterface;
 import com.spring.LibraryService.vo.CustomerVO;
 
 @Controller
 @EnableAsync
 public class MailController {
 	@Autowired
-	private MailService mailService;
+	private MailServiceInterface mailService;
 
+	
+	
 	
 	
 	
@@ -29,9 +33,8 @@ public class MailController {
 	//사용자의 이메일을 인증하기 위해 이메일 인증 코드를 전송하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/mail/sendEmailAuthCode.do")
-	@ResponseBody
-	public HashMap<String,String> sendEmailAuthCode(@RequestParam HashMap param, HttpServletRequest request) {
-		HashMap<String, String> map = new HashMap<String,String>();
+	public ResponseEntity<HashMap> sendEmailAuthCode(@RequestParam HashMap param, HttpServletRequest request) {
+		HashMap result = new HashMap();
 		HttpSession session = request.getSession(true);
 		CustomerVO customerVO = (CustomerVO) session.getAttribute("CUSTOMER");
 		
@@ -42,6 +45,7 @@ public class MailController {
 		param.put("to", param.get("customer_email"));
 		param.put("subject", "이메일 인증코드");
 		param.put("text", "이메일 인증코드는 "+email_authcode+" 입니다.");
+		
 		try {
 			mailService.sendMail(param);
 			
@@ -52,14 +56,14 @@ public class MailController {
 			
 			System.out.println("템프이메일"+param.get("customer_email"));
 			
-			map.put("flag", "true");
-			map.put("content", "해당 이메일로 인증번호를 전송했습니다.");
-			return map;
+			result.put("flag", "true");
+			result.put("content", "해당 이메일로 인증번호를 전송했습니다.");
+			return new ResponseEntity<HashMap>(result,HttpStatus.OK);
 		}catch(Exception e) {
 			e.printStackTrace();
-			map.put("flag", "false");
-			map.put("content", "인증번호 전송과정에서 오류가 발생했습니다.");
-			return map;
+			result.put("flag", "false");
+			result.put("content", "인증번호 전송과정에서 오류가 발생했습니다.");
+			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 		}
 	}
 }

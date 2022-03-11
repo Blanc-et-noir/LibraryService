@@ -25,7 +25,7 @@
 	<update id="changePasswordHint" parameterType="java.util.HashMap">
 		<![CDATA[
 			UPDATE password_hint
-			SET password_question_list_ID = #{password_question_list_ID}, password_hint_answer = #{password_hint_answer}
+			SET password_question_list_id = #{password_question_list_id}, password_hint_answer = #{password_hint_answer}
 			WHERE customer_id = #{customer_id}
 		]]>
 	</update>
@@ -64,7 +64,7 @@
 		<![CDATA[
 			SELECT L.password_question_list_content "password_question_list_content"
 			FROM password_hint H, password_question_list L
-			WHERE H.password_question_list_ID = L.password_question_list_ID AND H.customer_id = #{customer_id}
+			WHERE H.password_question_list_id = L.password_question_list_id AND H.customer_id = #{customer_id}
 		]]>
 	</select>
 	<select id="getSalt" resultType="String" parameterType="String">

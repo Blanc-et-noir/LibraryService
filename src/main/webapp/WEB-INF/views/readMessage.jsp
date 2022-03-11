@@ -18,13 +18,6 @@
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/sidebar.jsp"></jsp:include>
-	<c:if test= "${sessionScope.CUSTOMER == null}">
-    	<script>
-    		var form = $("<form action='${path}/customer/mainForm.do' method='post'></form>");
-    		$("body").append(form);
-    		form.submit();
-    	</script>
-    </c:if>
     <div id="container" style="overflow: scroll;">
 		<div id="MESSAGE_SEND">
 			<div class="subtitle">

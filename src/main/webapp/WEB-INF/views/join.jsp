@@ -19,13 +19,6 @@
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/sidebar.jsp"/>
-    <c:if test= "${sessionScope.CUSTOMER != null}">
-    	<script>
-    		var form = $("<form action='${path}/customer/mainForm.do' method='post'></form>");
-    		$("body").append(form);
-    		form.submit();
-    	</script>
-    </c:if>
     <div id="container" style="overflow: scroll;">
         <form id="joinform" action="${path}/customer/join.do" method="post">
         	<div class="subtitle">가입 정보</div>

@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository("bookDAO")
-public class BookDAO {
+public class BookDAO implements BookDAOInterface{
 	
-	/*
+	
 	
 	
 	
@@ -46,8 +46,8 @@ public class BookDAO {
 	//해당 도서의 재고량을 1 감소시키는 메소드.
 	//============================================================================================
 	public void decreaseBookNum(HashMap param) throws Exception{
-		int num = sqlSession.update("book.decreaseBookNum",param);
-		if(num==0) {
+		int num = 0;
+		if((num=sqlSession.update("book.decreaseBookNum",param))==0) {
 			throw new Exception();
 		}
 	}
@@ -60,8 +60,8 @@ public class BookDAO {
 	//해당 도서의 재고량을 1 증가시키는 메소드.
 	//============================================================================================
 	public void increaseBookNum(HashMap param) throws Exception{
-		int num = sqlSession.update("book.increaseBookNum",param);
-		if(num==0) {
+		int num = 0;
+		if((num=sqlSession.update("book.increaseBookNum",param))==0) {
 			throw new Exception();
 		}
 	}
@@ -74,8 +74,8 @@ public class BookDAO {
 	//도서 대출현황을 삽입하는 메소드.
 	//============================================================================================
 	public void insertCheckOut(HashMap param) throws Exception{
-		int num = sqlSession.insert("book.insertCheckOut",param);
-		if(num==0) {
+		int num = 0;
+		if((num=sqlSession.insert("book.insertCheckOut",param))==0) {
 			throw new Exception();
 		}
 	}
@@ -98,7 +98,7 @@ public class BookDAO {
 	//============================================================================================
 	//특정 사용자의 미반납 대출현황 정보 개수를 반환함.
 	//============================================================================================
-	public int getCheckOutsCount(HashMap param) {
+	public int getCheckOutsCount(HashMap param) throws Exception{
 		return sqlSession.selectOne("book.getCheckOutsCount", param);
 	}
 	
@@ -159,7 +159,9 @@ public class BookDAO {
 	
 	//============================================================================================
 	//대출 연장이 가능한지 여부를 조회하는 메소드.
+	//DB의 CHECK 제약조건으로 해결
 	//============================================================================================
+	/*
 	public boolean isExtensible(HashMap param) throws Exception{
 		Integer num;
 		if((num=sqlSession.selectOne("book.isExtensible", param))==null) {
@@ -172,7 +174,7 @@ public class BookDAO {
 			}
 		}
 	}
-	
+	*/
 	
 	
 	
@@ -181,11 +183,8 @@ public class BookDAO {
 	//연체된 대출정보가 존재하는 사용자들에게 연체 알림 메세지 일괄전송 요청을 처리하는 메소드.
 	//============================================================================================
 	public void sendMessage(HashMap param) throws Exception{
-		sqlSession.insert("book.sendMessage", param);
+		if(sqlSession.insert("book.sendMessage", param)==0) {
+			throw new Exception();
+		}
 	}
-	
-	
-	
-	
-	*/
 }

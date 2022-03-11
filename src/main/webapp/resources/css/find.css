@@ -16,7 +16,7 @@
     font-size: 12px;
     color: var(--c8);
 }
-#FIND_BY_PHONE, #FIND_BY_EMAIL, #GET_QUESTION_BUTTON, #FIND_PASSWORD_BUTTON{
+#find_by_phone, #find_by_email, #get_question_button, #find_password_button{
     width: 15%;
     height: 40px;
     display: block;
@@ -26,11 +26,11 @@
     background-color: var(--c2);
     font-size: 12px;
 }
-#FIND_BY_PHONE:hover, #FIND_BY_EMAIL:hover, #GET_QUESTION_BUTTON:hover, #FIND_PASSWORD_BUTTON:hover{
+#find_by_phone:hover, #find_by_email:hover, #get_question_button:hover, #find_password_button:hover{
     color: white;
     background-color: var(--c3);
 }
-#PASSWORD_QUESTION_LIST_CONTENT{
+#password_question_list_content{
 	width:100%;
 	height:120px;
 	background-color:var(--c4);
@@ -40,7 +40,7 @@
 	word-break:keep-all;
 	overflow:scroll;
 }
-#FIND_ID, #FIND_PW{
+#find_id,#find_pw{
 	width:50%;
 	height:40px;
 	background-color: var(--c2);
@@ -48,7 +48,7 @@
 	text-align:center;
 	line-height:40px;
 }
-#FIND_ID:hover, #FIND_PW:hover{
+#find_id:hover,#find_pw:hover{
 	background-color: var(--c3);
 	color:white;
 }

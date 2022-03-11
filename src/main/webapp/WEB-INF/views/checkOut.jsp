@@ -20,8 +20,8 @@
 <body>
     <div id="container" style="overflow: scroll;">
         <form id="checkOutform">
-			<input id="CUSTOMER_ID" type="text" name="CUSTOMER_ID" autocomplete="off" placeholder="사용자 ID" class="input">
-			<input id="BOOK_ISBN" type="text" name="BOOK_ISBN" autocomplete="off" placeholder="ISBN 코드" class="input">
+			<input id="CUSTOMER_ID" type="text" name="customer_id" autocomplete="off" placeholder="사용자 ID" class="input">
+			<input id="BOOK_ISBN" type="text" name="book_isbn" autocomplete="off" placeholder="ISBN 코드" class="input">
             <div style="display: flex; flex-direction: row; width: 100%; flex: 1;">
 				<input id="CHECK_OUT_BUTTON" type="button" value="대출하기">
 				<input id="CHECK_OUT_RESET_BUTTON" type="reset" value="새로고침">

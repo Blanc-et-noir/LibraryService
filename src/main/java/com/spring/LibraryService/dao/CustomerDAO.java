@@ -7,7 +7,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.spring.LibraryService.encrypt.SHA;
 import com.spring.LibraryService.vo.CustomerVO;
 
 @Repository("customerDAO")
@@ -136,10 +135,12 @@ public class CustomerDAO implements CustomerDAOInterface{
 	//============================================================================================
 	//비밀번호 찾기 질문을 검증하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public void validateAnswer(HashMap param) throws Exception{
-		if(sqlSession.selectOne("customer.validateAnswer",param)==null) {
+	public String validateAnswer(HashMap param) throws Exception{
+		String customer_email = null;
+		if((customer_email=sqlSession.selectOne("customer.validateAnswer",param))==null) {
 			throw new Exception();
 		}
+		return customer_email;
 	}
 	
 	

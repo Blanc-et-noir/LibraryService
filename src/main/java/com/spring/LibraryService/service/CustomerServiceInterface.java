@@ -62,7 +62,7 @@ public interface CustomerServiceInterface {
 	//============================================================================================
 	//비밀번호 찾기 질문에 대한 답을 검증하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public ResponseEntity<HashMap> validateAnswer(HashMap<String,String> param) throws Exception;
+	public ResponseEntity<HashMap> validateAnswer(HashMap<String,String> param,HttpServletRequest request) throws Exception;
 	
 	
 	
