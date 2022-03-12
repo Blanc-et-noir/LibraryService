@@ -32,7 +32,7 @@ public class MessageController {
 	//메세지 송신 화면 뷰를 리턴하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/message/sendMessageForm.do")
-	public ModelAndView LOGONMAV_sendMessageForm(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView sendMessageForm(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("sendMessage");
 	}
 	
@@ -45,7 +45,7 @@ public class MessageController {
 	//메세지 수신 화면 뷰를 리턴하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/message/receiveMessageForm.do")
-	public ModelAndView LOGONMAV_receiveMessageForm(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView receiveMessageForm(HttpServletRequest request, HttpServletResponse response) {
 		return new ModelAndView("receiveMessage");
 	}
 	
@@ -55,10 +55,22 @@ public class MessageController {
 	
 	
 	//============================================================================================
+	//메세지 송신 화면 뷰를 리턴하는 메소드.
+	//============================================================================================
+	@RequestMapping(value="/message/readMessageForm.do")
+	public ModelAndView readMessageForm(HttpServletRequest request, HttpServletResponse response) {
+		return new ModelAndView("readMessage");
+	}
+	
+	
+	
+	
+	
+	//============================================================================================
 	//메세지 읽기 요청을 처리하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/message/readMessage.do")
-	public ResponseEntity<HashMap> LOGONMAV_readMessageForm(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
+	public ModelAndView readMessageForm(@RequestParam HashMap<String,String> param, HttpServletRequest request) {
 		HashMap result = new HashMap();
 		try {
 			HttpSession session = request.getSession(true);
@@ -67,17 +79,17 @@ public class MessageController {
 			
 			//메세지 읽기에 성공하면, 메세지 상세정보를 보여주는 뷰를 리턴함.
 			//해당 mav객체에 읽은 메세지 객체를 담음.
-			MessageVO message = messageService.readMessage(param);
+		
+			MessageVO message = messageService.readMessage(param);		
 			
-			result.put("message_box", param.get("message_box"));
-			result.put("message", message);
-			result.put("flag", "true");
-			result.put("content", "메세지 조회 성공");
-			return new ResponseEntity<HashMap>(result,HttpStatus.OK);
+			ModelAndView mav = new ModelAndView("readMessage");
+			mav.addObject("message_box", param.get("message_box"));
+			mav.addObject("message", message);
+			return mav;
 		}catch(Exception e) {
 			result.put("flag", "false");
 			result.put("content", "메세지 조회 실패");
-			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			return new ModelAndView("receiveMessage");
 		}
 	}
 	
@@ -90,7 +102,7 @@ public class MessageController {
 	//메세지 송신 요청을 처리하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/message/sendMessage.do")
-	public ResponseEntity<HashMap> LOGONMAP_sendMessage(@RequestParam HashMap<String,String> param, HttpServletRequest request){
+	public ResponseEntity<HashMap> sendMessage(@RequestParam HashMap<String,String> param, HttpServletRequest request){
 		HashMap result = new HashMap();
 		try {
 			HttpSession session = request.getSession();
@@ -102,7 +114,7 @@ public class MessageController {
 			
 			messageService.sendMessage(param);
 			result.put("flag","true");
-			result.put("content", "메세지 전송 실패");
+			result.put("content", "메세지 전송 성공");
 			return new ResponseEntity<HashMap>(result,HttpStatus.OK);
 		}catch(Exception e) {
 			result.put("flag","false");
@@ -120,7 +132,7 @@ public class MessageController {
 	//메세지 목록을 조회하는 요청을 처리하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/message/receiveMessage.do")
-	public ResponseEntity<HashMap> LOGONMAP_receiveMessage(@RequestParam HashMap param, HttpServletRequest request){
+	public ResponseEntity<HashMap> receiveMessage(@RequestParam HashMap param, HttpServletRequest request){
 		HashMap result = new HashMap();
 		try {
 			HttpSession session = request.getSession();
@@ -155,7 +167,7 @@ public class MessageController {
 	//메세지 삭제 요청을 처리하는 메소드.
 	//============================================================================================
 	@RequestMapping(value="/message/deleteMessage.do")
-	public ResponseEntity<HashMap> LOGONMAP_deleteMessage(@RequestParam HashMap param, HttpServletRequest request){
+	public ResponseEntity<HashMap> deleteAllMessage(@RequestParam HashMap param, HttpServletRequest request){
 		HashMap result = new HashMap();
 		try {
 			HttpSession session = request.getSession();
@@ -172,6 +184,7 @@ public class MessageController {
 			result.put("content", "메세지 삭제 성공");
 			return new ResponseEntity<HashMap>(result,HttpStatus.OK);
 		}catch(Exception e) {
+			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "메세지 삭제 실패.");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);

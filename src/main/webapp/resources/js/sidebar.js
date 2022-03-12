@@ -24,8 +24,7 @@ function closeWin(){
 function openWin(){  
 	if(open==false){
 		open = true;
-		//
-		$("body").append("<form id='checkOutForm'><a id='checkOutFormCloseButton' onclick='closeWin()'>✖</a><input id='CHECK_OUT_CUSTOMER_ID' type='text' name='CUSTOMER_ID' autocomplete='off' placeholder='사용자 ID' class='input2'><input id='CHECK_OUT_BOOK_ISBN' type='text' name='BOOK_ISBN' autocomplete='off' placeholder='ISBN 코드' class='input2'><div style='display: flex; flex-direction: row; width: 100%; flex: 1;'><input id='CHECK_OUT_BUTTON' type='button' value='대출하기'><input id='CHECK_OUT_RESET_BUTTON' type='reset' value='새로고침'></div></form>");
+		$("body").append("<form id='checkOutForm'><a id='checkOutFormCloseButton' onclick='closeWin()'>✖</a><input id='check_out_customer_id' type='text' name='customer_id' autocomplete='off' placeholder='사용자 ID' class='input2'><input id='check_out_book_isbn' type='text' name='book_isbn' autocomplete='off' placeholder='ISBN 코드' class='input2'><div style='display: flex; flex-direction: row; width: 100%; flex: 1;'><input id='check_out_button' type='button' value='대출하기'><input id='check_out_reset_button' type='reset' value='새로고침'></div></form>");
 		//JQueryUI를 활용해 드래그가 가능하도록 설정.
 		$("#checkOutForm").draggable({ containment: "parent", scroll: false });
 	}
@@ -41,25 +40,25 @@ $(document).ready(function(){
 	//도서 대출 메뉴의 대출하기 버튼 클릭시, 도서 대출 요청을 백엔드 서버에 전달.
 	//파라미터로 사용자 ID와 도서 ISBN 코드가 필요.
 	//============================================================================================
-	$(document).on("click","#CHECK_OUT_BUTTON",function(){
-		if($("#CHECK_OUT_CUSTOMER_ID").val().length == 0){
+	$(document).on("click","#check_out_button",function(){
+		if($("#check_out_customer_id").val().length == 0){
 			alert("사용자 ID를 입력해야합니다.");
-		}else if($("#CHECK_OUT_BOOK_ISBN").val().length == 0){
+		}else if($("#check_out_book_isbn").val().length == 0){
 			alert("ISBN 코드를 입력해야합니다.");
 		}else{
 			$.ajax({
 				"url":"/LibraryService/book/checkOut.do",
-				"type":"POST",
+				"type":"post",
 				"data":{
-					"CUSTOMER_ID":$("#CHECK_OUT_CUSTOMER_ID").val(),
-					"BOOK_ISBN":$("#CHECK_OUT_BOOK_ISBN").val()
+					"customer_id":$("#check_out_customer_id").val(),
+					"book_isbn":$("#check_out_book_isbn").val()
 				},
 				"success":function(result){
-					alert(result.CONTENT);
-					$("#CHECK_OUT_BOOK_ISBN").val("");
+					alert(result.content);
+					$("#check_out_book_isbn").val("");
 				},
-				"error":function(){
-					alert("에러");
+				"error":function(xhr, status, error){
+	    			alert(JSON.parse(xhr.responseText).content);
 				}
 			})
 		}

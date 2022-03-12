@@ -1,4 +1,4 @@
-#DELETE_BUTTON, #SEARCH_BUTTON,#MESSAGE_SENT,#MESSAGE_RECEIVED{
+#delete_button, #search_button,#message_sent,#message_received{
 	background-color:var(--c2);
 	color:white;
 	font-size:12px;
@@ -7,17 +7,17 @@
 	text-align:center;
 	line-height:40px;
 }
-#TOP_PANEL input{
+#top_panel input{
 	height:100%;
 	text-indent:20px;
 	flex:1;
 	background-color:var(--c4);
 	color:var(--c8);
 }
-#DELETE_BUTTON:hover, #SEARCH_BUTTON:hover,#MESSAGE_SENT:hover,#MESSAGE_RECEIVED:hover{
+#delete_button:hover, #search_button:hover,#message_sent:hover,#message_received:hover{
 	background-color:var(--c3);
 }
-#LIST{
+#list{
 	table-layout: fixed;
 	margin:30px auto 0px auto;
 	border-collapse:collapse;
@@ -29,13 +29,13 @@
 	border-right:none;
 }
 
-#LIST input[type='checkbox']{
+#list input[type='checkbox']{
 	width:20px;
 	height:20px;
 	display:block;
 	margin:0px auto;
 }
-#LIST a{
+#list a{
 	color:var(--c8);
 	overflow: hidden;
 	white-space: nowrap;
@@ -44,10 +44,10 @@
 	width:100%;
 	height:100%;
 }
-#LIST a:hover{
+#list a:hover{
 	color:var(--c2);
 }
-#LIST tr{
+#list tr{
 	height:40px;
 	line-height:20px;
 	border:2px solid #e1e1e1;
@@ -56,34 +56,34 @@
 	background-color:var(--c4);
 	color:var(--c8);
 }
-#LIST tr:hover{
+#list tr:hover{
 	background-color:var(--c1);
 }
-#LIST tr:nth-of-type(1){
+#list tr:nth-of-type(1){
 	height:40px;
 	line-height:40px;
 	
 }
 
-#LIST td:nth-of-type(1),#LIST th:nth-of-type(1){
+#list td:nth-of-type(1),#list th:nth-of-type(1){
 	width:40px;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	text-align:center;
 }
-#LIST td:nth-of-type(2),#LIST th:nth-of-type(2){
+#list td:nth-of-type(2),#list th:nth-of-type(2){
 	width:100px;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	text-align:center;
 }
-#LIST td:nth-of-type(4),#LIST th:nth-of-type(4){
+#list td:nth-of-type(4),#list th:nth-of-type(4){
 	width:80px;
 	text-align:center;
 }
-#TOP_PANEL{
+#top_panel{
 	border-collapse:collapse;
 	min-width:460px;
 	max-width:700px;
@@ -93,7 +93,7 @@
 	display:flex;
 }
 
-#SELECT_ALL_BUTTON, #TIME, #TITLE, #FLAG, #DATE{
+#select_all_button, #time, #title, #flag, #date{
 	color:var(--c8);
 	text-align:center;
 	background-color:var(--c1);

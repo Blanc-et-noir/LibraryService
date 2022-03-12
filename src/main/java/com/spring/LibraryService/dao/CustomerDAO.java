@@ -165,8 +165,8 @@ public class CustomerDAO implements CustomerDAOInterface{
 	//============================================================================================
 	//비밀번호를 변경하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public void changePassword(HashMap param) throws Exception{
-		if(sqlSession.update("customer.changePassword", param)==0) {
+	public void changePasswordOnly(HashMap param) throws Exception{
+		if(sqlSession.update("customer.changePasswordOnly", param)==0) {
 			throw new Exception();
 		}
 	}
@@ -175,12 +175,11 @@ public class CustomerDAO implements CustomerDAOInterface{
 	
 	
 	
-	
 	//============================================================================================
-	//비밀번호 찾기 질문과 그에 대한 답을 변경하는 요청을 처리하는 메소드.
+	//비밀번호 및 솔트, 질문, 정답을 변경하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public void changePasswordHint(HashMap param) throws Exception{
-		if(sqlSession.update("customer.changePasswordHint", param)==0) {
+	public void changePassword(HashMap param) throws Exception{
+		if(sqlSession.update("customer.changePassword", param)==0) {
 			throw new Exception();
 		}
 	}
@@ -209,5 +208,50 @@ public class CustomerDAO implements CustomerDAOInterface{
 	//============================================================================================
 	public List getPasswordQuestionList(){
 		return sqlSession.selectList("customer.getPasswordQuestionList");
+	}
+	
+	
+	
+	
+	
+	
+	//============================================================================================
+	//ID 중복여부 확인
+	//============================================================================================
+	public void checkID(HashMap param) throws Exception{
+		String result = null;
+		if((result = sqlSession.selectOne("customer.checkID",param))!=null) {
+			throw new Exception();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	//============================================================================================
+	//전화번호 중복여부 확인
+	//============================================================================================
+	public void checkPhone(HashMap param) throws Exception{
+		String result = null;
+		if((result = sqlSession.selectOne("customer.checkPhone",param))!=null) {
+			throw new Exception();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	//============================================================================================
+	//이메일 중복여부 확인
+	//============================================================================================
+	public void checkEmail(HashMap param) throws Exception{
+		String result = null;
+		if((result = sqlSession.selectOne("customer.checkEmail",param))!=null) {
+			throw new Exception();
+		}
 	}
 }

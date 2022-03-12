@@ -87,10 +87,7 @@ public class MessageDAO implements MessageDAOInterface{
 			param.put("owner_id", "sender_id");
 			param.put("target_id", "receiver_id");
 		}
-		if((total=sqlSession.selectOne("message.getMessageCount",param))==0) {
-			throw new Exception();
-		}
-		return total;
+		return sqlSession.selectOne("message.getMessageCount",param);
 	}
 	
 	

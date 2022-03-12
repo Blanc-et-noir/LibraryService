@@ -19,10 +19,10 @@
 <body>
 	<jsp:include page="/WEB-INF/views/sidebar.jsp"></jsp:include>
     <div id="container" style="overflow: scroll;">
-		<div id="MESSAGE_SEND">
+		<div id="message_send">
 			<div class="subtitle">
 				<c:choose>
-					<c:when test="${MESSAGE_BOX == 'MESSAGE_RECEIVED'}">
+					<c:when test="${message_box == 'message_received'}">
 						송신자
 					</c:when>
 					<c:otherwise>
@@ -31,24 +31,25 @@
 				</c:choose>
 			</div>
 			<c:choose>
-				<c:when test="${MESSAGE_BOX == 'MESSAGE_RECEIVED'}">
-					<input id="CUSTOMER_ID" class="input" type="text" autocomplete="off" readonly value="${messageVO.SENDER_ID}">
+				<c:when test="${message_box == 'message_received'}">
+					<input id="customer_id" class="input" type="text" autocomplete="off" readonly value="${message.sender_id}">
 				</c:when>
 				<c:otherwise>
-					<input id="CUSTOMER_ID" class="input" type="text" autocomplete="off" readonly value="${messageVO.RECEIVER_ID}">
+					<input id="customer_id" class="input" type="text" autocomplete="off" readonly value="${message.receiver_id}">
 				</c:otherwise>
 			</c:choose>
 			<div style="margin-top:40px;" class="subtitle">메세지 제목</div>
-			<input id="MESSAGE_TITLE" class="input" type="text" autocomplete="off" readonly value="${messageVO.MESSAGE_TITLE}">
+			<input id="message_title" class="input" type="text" autocomplete="off" readonly value="${message.message_title}">
 			<div style="margin-top:40px;" class="subtitle">메세지 내용</div>
-			<textarea id="MESSAGE_CONTENT" class="input" autocomplete="off" maxlength="1000" placeholder="메세지 내용" readonly>${messageVO.MESSAGE_CONTENT}</textarea>
-			<form id="BOTTOM_PANEL" action="/LibraryService/message/deleteMessage.do">
-				<input id="MESSAGE_ID" name="MESSAGE_ID" type="hidden" value="${messageVO.MESSAGE_ID}">
-				<input id="MESSAGE_BOX" name="MESSAGE_BOX" type="hidden" value="${MESSAGE_BOX}">
-				<input id="MESSAGE_RETURN_BUTTON" type="button" value="목륵보기">
-				<input id="MESSAGE_DELETE_BUTTON" type="button" value="삭제하기">
+			<textarea id="message_content" class="input" autocomplete="off" maxlength="1000" placeholder="메세지 내용" readonly>${message.message_content}</textarea>
+			<form id="bottom_panel" action="/LibraryService/message/deleteMessage.do">
+				<input id="message_id" name="message_id" type="hidden" value="${message.message_id}">
+				<input id="message_box" name="message_box" type="hidden" value="${message_box}">
+				<input id="message_return_button" type="button" value="목륵보기">
+				<input id="message_delete_button" type="button" value="삭제하기">
 			</form>
 		</div>
+		<div>${message_box}dd</div>
     </div>
 </body>
 </html>

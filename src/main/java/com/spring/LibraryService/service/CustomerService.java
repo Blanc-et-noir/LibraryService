@@ -40,10 +40,10 @@ public class CustomerService implements CustomerServiceInterface{
 		//솔트 값을 이용하여 사용자의 비밀번호를 SHA512로 더블 해싱하고 이를 저장함.
 		//단방향 해싱이므로 복호화가 불가능하게끔 저장함.
 		String privatekey = param.get("privatekey");
-		String salt = customerDAO.getSalt(param);
+		String customer_salt = customerDAO.getSalt(param);
 		String customer_pw = param.get("customer_pw");
 		
-		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(customer_pw, privatekey), salt));
+		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(customer_pw, privatekey), customer_salt));
 		return customerDAO.login(param);
 	}
 	
@@ -58,12 +58,18 @@ public class CustomerService implements CustomerServiceInterface{
 	public HashMap<String, String> join(HashMap<String,String> param) throws Exception{
 		HashMap<String,String> result = new HashMap<String,String>();
 		//회원가입하려는 회원 정보를 새로 추가함, 비밀번호 찾기 질문 또한 같이 저장함.
+		
+		//아이디 중복 확인
+		customerDAO.checkID(param);
+		//전화번호 중복 확인
+		customerDAO.checkPhone(param);
+		//이메일 중복 확인
+		customerDAO.checkEmail(param);
+		
 		customerDAO.join(param);
-		customerDAO.insertPasswordHint(param);
 		result.put("flag", "true");
 		result.put("content", "회원가입에 성공했습니다.");
 		return result;
-		//customerDAO.ERROR();
 	}
 	
 	
@@ -139,8 +145,8 @@ public class CustomerService implements CustomerServiceInterface{
 		//사용자의 솔트값을 이용해 공백이 제거된 비밀번호 찾기 질문에 대한 답을 SHA512로 더블 해싱함.
 		//해싱된 결과와 DB에 저장된 비밀번호 찾기 질문에 대한 답이 일치해야 검증에 성공.
 		String privatekey = (String) session.getAttribute("privatekey");
-		String salt = customerDAO.getSalt(param);
-		String password_hint_answer = SHA.DSHA512((RSA2048.decrypt(param.get("password_hint_answer"), privatekey)).replaceAll(" ", ""),salt);
+		String customer_salt = customerDAO.getSalt(param);
+		String password_hint_answer = SHA.DSHA512((RSA2048.decrypt(param.get("password_hint_answer"), privatekey)).replaceAll(" ", ""),customer_salt);
 		String customer_id = param.get("customer_id");
 		
 		//검증에 성공하면 무작위 솔트 값 2개를 이용하여 더블 해싱한 결과 16자리를 임시 비밀번호로써 사용함. 
@@ -154,10 +160,9 @@ public class CustomerService implements CustomerServiceInterface{
 		
 		String customer_pw = SHA.DSHA512(SHA.getSalt(),SHA.getSalt()).substring(0,16);
 		
-		param.put("customer_pw", SHA.DSHA512(customer_pw, salt));
-		param.put("salt", salt);
+		param.put("customer_pw", SHA.DSHA512(customer_pw, customer_salt));
 		
-		customerDAO.changePassword(param);
+		customerDAO.changePasswordOnly(param);
 		
 		param.put("to", customer_email);
 		param.put("subject", "임시 비밀번호");
@@ -182,27 +187,24 @@ public class CustomerService implements CustomerServiceInterface{
 		HashMap result = new HashMap();
 		HttpSession session = request.getSession();
 		String privatekey = (String)session.getAttribute("privatekey");
-		String salt = customerDAO.getSalt(param);		
+		String customer_salt = customerDAO.getSalt(param);		
 		String customer_pw_new = param.get("customer_pw");
 		//솔트 값을 얻어서 해당 솔트 값으로 기존 비밀번호를 SHA512로 더블 해싱한 결과가 DB에 저장된 더블 해싱된 비밀번호와 일치해야 비밀번호 변경함. 
 		
-		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(param.get("customer_pw_old"), privatekey).replace(" ", ""), salt));
+		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(param.get("customer_pw_old"), privatekey).replace(" ", ""), customer_salt));
 		customerDAO.validatePassword(param);
 		
-		String newSalt = SHA.getSalt();
+		String newCustomer_salt = SHA.getSalt();
 		HashMap<String,String> map = new HashMap<String,String>();
 		
 		//비밀번호 검증 성공시 비밀번호와 솔트 값, 비밀번호 찾기 질문과 비밀번호 찾기 질문에 대한 답을 변경함.
 		//이때 비밀번호와 비밀번호 찾기 질문에 대한 답은 반드시 단방향 SHA512와 솔트 값으로 더블 해싱하여 저장함.
 		//보안상 복호화가 불가능해야함.
 		
-		param.put("salt", newSalt);
-		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(customer_pw_new, privatekey).replace(" ", ""), newSalt));
+		param.put("customer_salt", newCustomer_salt);
+		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(customer_pw_new, privatekey).replace(" ", ""), newCustomer_salt));
+		param.put("password_hint_answer", SHA.DSHA512(RSA2048.decrypt(param.get("password_hint_answer").replace(" ", ""), privatekey),newCustomer_salt));
 		customerDAO.changePassword(param);
-
-		
-		param.put("password_hint_answer", SHA.DSHA512(RSA2048.decrypt(param.get("password_hint_answer").replace(" ", ""), privatekey),newSalt));
-		customerDAO.changePasswordHint(param);
 		
 		session.invalidate();
 		

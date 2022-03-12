@@ -3,75 +3,51 @@ package com.spring.LibraryService.vo;
 import java.sql.Date;
 
 public class MessageVO {
+	private String sender_id, receiver_id, message_title, message_content,message_date_string;
+	private int message_id;
+	private Date message_date;
 	
-	private String SENDER_ID, RECEIVER_ID, MESSAGE_TITLE, MESSAGE_CONTENT,MESSAGE_DATE_STRING;
-	private int MESSAGE_ID;
-	private Date MESSAGE_DATE;
-	
-	public MessageVO(int MESSAGE_ID, String SENDER_ID, String RECEIVER_ID, Date MESSAGE_TIME, String MESSAGE_TITLE,
-			String MESSAGE_CONTENT) {
-		this.MESSAGE_ID = MESSAGE_ID;
-		this.SENDER_ID = SENDER_ID;
-		this.RECEIVER_ID = RECEIVER_ID;
-		this.MESSAGE_DATE = MESSAGE_TIME;
-		this.MESSAGE_TITLE = MESSAGE_TITLE;
-		this.MESSAGE_CONTENT = MESSAGE_CONTENT;
+	public String getSender_id() {
+		return sender_id;
 	}
-	public MessageVO() {
-		
+	public void setSender_id(String sender_id) {
+		this.sender_id = sender_id;
 	}
-	public int getMESSAGE_ID() {
-		return MESSAGE_ID;
+	public String getReceiver_id() {
+		return receiver_id;
 	}
-
-	public void setMESSAGE_ID(int MESSAGE_ID) {
-		this.MESSAGE_ID = MESSAGE_ID;
+	public void setReceiver_id(String receiver_id) {
+		this.receiver_id = receiver_id;
 	}
-
-	public String getSENDER_ID() {
-		return this.SENDER_ID;
+	public String getMessage_title() {
+		return message_title;
 	}
-
-	public void setSENDER_ID(String SENDER_ID) {
-		this.SENDER_ID = SENDER_ID;
+	public void setMessage_title(String message_title) {
+		this.message_title = message_title;
 	}
-
-	public String getRECEIVER_ID() {
-		return RECEIVER_ID;
+	public String getMessage_content() {
+		return message_content;
 	}
-
-	public void setRECEIVER_ID(String RECEIVER_ID) {
-		this.RECEIVER_ID = RECEIVER_ID;
+	public void setMessage_content(String message_content) {
+		this.message_content = message_content;
 	}
-	public String getMESSAGE_DATE_STRING() {
-		return MESSAGE_DATE_STRING;
+	public String getMessage_date_string() {
+		return message_date_string;
 	}
-
-	public void setMESSAGE_DATE_STRING(String MESSAGE_DATE_STRING) {
-		this.MESSAGE_DATE_STRING = MESSAGE_DATE_STRING;
+	public void setMessage_date_string(String message_date_string) {
+		this.message_date_string = message_date_string;
 	}
-	public Date getMESSAGE_DATE() {
-		return MESSAGE_DATE;
+	public int getMessage_id() {
+		return message_id;
 	}
-
-	public void setMESSAGE_DATE(Date MESSAGE_DATE) {
-		this.MESSAGE_DATE = MESSAGE_DATE;
+	public void setMessage_id(int message_id) {
+		this.message_id = message_id;
 	}
-
-	public String getMESSAGE_TITLE() {
-		return MESSAGE_TITLE;
+	public Date getMessage_date() {
+		return message_date;
 	}
-
-	public void setMESSAGE_TITLE(String MESSAGE_TITLE) {
-		this.MESSAGE_TITLE = MESSAGE_TITLE;
-	}
-
-	public String getMESSAGE_CONTENT() {
-		return MESSAGE_CONTENT;
-	}
-
-	public void setMESSAGE_CONTENT(String MESSAGE_CONTENT) {
-		this.MESSAGE_CONTENT = MESSAGE_CONTENT;
+	public void setMessage_date(Date message_date) {
+		this.message_date = message_date;
 	}	
 }
 

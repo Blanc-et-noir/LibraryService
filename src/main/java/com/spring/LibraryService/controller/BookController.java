@@ -48,13 +48,13 @@ public class BookController {
 	//대출 현황 정보를 조회할 수 있는 화면 뷰를 리턴하는 메소드.
 	//관리자가 아니라면 접근할 수 없는 뷰.
 	//============================================================================================
-	@RequestMapping(value="/book/listCheckOutForm.do")
-	public ModelAndView LOGONMAV_listCheckOutForm(HttpServletRequest request) {
+	@RequestMapping(value="/book/checkOutListForm.do")
+	public ModelAndView listCheckOutForm(HttpServletRequest request) {
 		CustomerVO customer = (CustomerVO) request.getSession().getAttribute("customer");
 		if(customer.getKind_number() != 0) {
 			return new ModelAndView("main");
 		}else {
-			return new ModelAndView("listCheckOut");
+			return new ModelAndView("checkOutList");
 		}
 	}
 	
@@ -85,7 +85,7 @@ public class BookController {
 	//도서 대출 요청을 처리하는 메소드, 관리자가 아니면 사용할 수 없다.
 	//============================================================================================
 	@RequestMapping(value="/book/checkOut.do")
-	public ResponseEntity<HashMap> LOGONMAP_checkOut(@RequestParam HashMap param, HttpServletRequest request){
+	public ResponseEntity<HashMap> checkOut(@RequestParam HashMap param, HttpServletRequest request){
 		HashMap result = new HashMap();
 		CustomerVO customer = (CustomerVO) request.getSession().getAttribute("customer");
 		
@@ -113,7 +113,7 @@ public class BookController {
 	//대출 정보에 대하여 해당 도서를 반납하도록 요청하는 메소드, 관리자가 아니면 사용할 수 없다.
 	//============================================================================================
 	@RequestMapping(value="/book/returnBook.do")
-	public ResponseEntity<HashMap> LOGONMAP_returnBook(@RequestParam HashMap param, HttpServletRequest request){
+	public ResponseEntity<HashMap> returnBook(@RequestParam HashMap param, HttpServletRequest request){
 		HashMap result = new HashMap();
 		CustomerVO customer = (CustomerVO) request.getSession().getAttribute("customer");
 		
@@ -143,7 +143,7 @@ public class BookController {
 	//대출 반납 기한을 연장하는 메소드, 관리자가 아니어도 일반 사용자가 자신의 대출정보에 대하여 반납기한을 연장할 수 있다.
 	//============================================================================================
 	@RequestMapping(value="/book/renewBook.do")
-	public ResponseEntity<HashMap> LOGONMAP_renewBook(@RequestParam HashMap param,HttpServletRequest request){
+	public ResponseEntity<HashMap> renewBook(@RequestParam HashMap param,HttpServletRequest request){
 		HashMap result = new HashMap();
 		try {
 			bookService.renewBook(param);
@@ -164,8 +164,8 @@ public class BookController {
 	//============================================================================================
 	//대출 현황 목록을 얻는 메소드, 관리자가 아니면 사용할 수 없다.
 	//============================================================================================
-	@RequestMapping(value="/book/listCheckOuts.do")
-	public ResponseEntity<HashMap> LOGONMAP_listCheckOuts(@RequestParam HashMap param, HttpServletRequest request){
+	@RequestMapping(value="/book/checkOutList.do")
+	public ResponseEntity<HashMap> listCheckOuts(@RequestParam HashMap param, HttpServletRequest request){
 		HashMap result = new HashMap();
 		CustomerVO customer = (CustomerVO) request.getSession().getAttribute("customer");
 		
@@ -194,7 +194,7 @@ public class BookController {
 	//관리자가 아니면 사용할 수 없다.
 	//============================================================================================
 	@RequestMapping(value="/book/sendMessage.do")
-	public ResponseEntity<HashMap> LOGONMAP_sendMessage(@RequestParam HashMap param,HttpServletRequest request){
+	public ResponseEntity<HashMap> sendMessage(@RequestParam HashMap param,HttpServletRequest request){
 		HashMap result = new HashMap();
 		CustomerVO customer = (CustomerVO) request.getSession().getAttribute("customer");
 

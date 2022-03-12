@@ -95,13 +95,7 @@ select[name="flag"]{
 	color:var(--c8);
 }
 
-input[name="data"]{
-	display:block;
-	flex:1;
-	text-indent:20px;
-	background-color:var(--c4);
-	color:var(--c8);
-}
+
 
 input[type="button"]{
 	min-width:50px;
@@ -110,12 +104,7 @@ input[type="button"]{
 	background-color: var(--c2);
 }
 input[type="button"]:hover{
-	background-color: var(--c3);;
-}
-#write{
-	width:70px;
-	height:30px;
-	margin:15px auto;
+	background-color: var(--c3);
 }
 
 #paging{
@@ -151,10 +140,17 @@ input[type="button"]:hover{
 	background-color:var(--c4);
 	color:var(--c8);
 }
-input[type=date]{
+input[type="date"]{
 	display:block;
 	min-width:60px;
 	font-size:10px;
+	background-color:var(--c4);
+	color:var(--c8);
+}
+#search{
+	display:block;
+	flex:1;
+	text-indent:20px;
 	background-color:var(--c4);
 	color:var(--c8);
 }

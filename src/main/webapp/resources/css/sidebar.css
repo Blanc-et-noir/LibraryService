@@ -113,13 +113,13 @@ textarea:-ms-input-placeholder {color:var(--c8);}
     background-color:var(--c2);
     color:white;
 }
-#CUSTOMER_INFO{
+#customer_info{
 	margin : 80px auto;
 	color : white;
 	text-align : center;
 	font-size : 40px;
 }
-#search{
+#find{
     width: 100%;
     height: 80px;
 }
@@ -268,7 +268,7 @@ textarea:-ms-input-placeholder {color:var(--c8);}
 }
 
 
-#CHECK_OUT_BUTTON,#CHECK_OUT_RESET_BUTTON{
+#check_out_button,#check_out_reset_button{
     width: 50%;
     height: 40px;
     display: block;
@@ -278,7 +278,7 @@ textarea:-ms-input-placeholder {color:var(--c8);}
     color:white;
     font-size: 12px;
 }
-#CHECK_OUT_BUTTON:hover,#CHECK_OUT_RESET_BUTTON:hover{
+#check_out_button:hover,#check_out_reset_button:hover{
     background-color:var(--c3);
     color:white;
 }

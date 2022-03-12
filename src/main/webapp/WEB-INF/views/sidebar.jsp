@@ -23,7 +23,7 @@
 		        <div id="myinfo">
             	<c:choose>
             		<c:when test= "${sessionScope.customer != null}">
-            			<div id="CUSTOMER_INFO">${sessionScope.customer.getCustomer_name()}</div>
+            			<div id="customer_info">${sessionScope.customer.getCustomer_name()}</div>
 						<a id="logout" href="${path}/customer/logout.do">로그아웃</a>
             		</c:when>
             		<c:otherwise>
@@ -32,7 +32,7 @@
             		</c:otherwise>
             	</c:choose>
         	</div>
-        	<div id="search">
+        	<div id="find">
             	<input type="text" name="bookname" id="inputname" placeholder="도서 또는 작가 이름을 입력하세요" autocomplete="off">
         	</div>
         	<div id="nav">
@@ -40,10 +40,8 @@
             	<c:if test="${sessionScope.customer !=null and sessionScope.customer.getKind_number()==0}">
 					<div id="mainnav1" class="mainnav active">사용자 관리</div>
             		<div class="subnav">
-            			<!--<a class="option" href="${path}/book/checkOutForm.do">도서 대출</a>-->
                 		<a class="option" onclick="openWin()">도서 대출</a>
-                		<a class="option" href="${path}/book/listCheckOutForm.do">대출 현황</a>
-                		<a class="option" href="${path}/book/analyzeCheckOutForm.do">대출 분석</a>
+                		<a class="option" href="${path}/book/checkOutListForm.do">대출 현황</a>
             		</div>
             	</c:if>
             	<div id="mainnav2" class="mainnav active">도서</div>

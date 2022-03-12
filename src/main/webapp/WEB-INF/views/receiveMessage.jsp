@@ -18,22 +18,15 @@
 </head>
 <body>
 	<jsp:include page="/WEB-INF/views/sidebar.jsp"/>
-    <c:if test= "${sessionScope.CUSTOMER == null}">
-    	<script>
-    		var form = $("<form action='${path}/customer/mainForm.do' method='post'></form>");
-    		$("body").append(form);
-    		form.submit();
-    	</script>
-    </c:if>
     <div id="container" style="overflow: scroll;">
-    	<div id="TOP_PANEL">
-    		<div id="DELETE_BUTTON">삭제</div>
-    		<input id="SEARCH"type="text" placeholder="메세지 검색" autocomplete="off" name="MESSAGE_SEARCH">
-    		<div id="SEARCH_BUTTON">검색</div>
-    		<div id="MESSAGE_SENT">송신</div>
-    		<div id="MESSAGE_RECEIVED">수신</div>
+    	<div id="top_panel">
+    		<div id="delete_button">삭제</div>
+    		<input id="search" type="text" placeholder="메세지 검색" autocomplete="off" name="message_search">
+    		<div id="search_button">검색</div>
+    		<div id="message_sent">송신</div>
+    		<div id="message_received">수신</div>
     	</div>
-    	<table id="LIST">
+    	<table id="list">
     	</table>
     	<div id="paging"></div>
     </div>

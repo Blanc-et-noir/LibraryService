@@ -5,27 +5,23 @@
 	<insert id="join" parameterType="com.spring.LibraryService.vo.CustomerVO">
 		<![CDATA[
 			INSERT INTO customer
-			VALUES(#{customer_id},#{customer_pw},#{customer_name},#{customer_phone},#{customer_email},#{customer_address},#{customer_bdate},1,#{salt},SYSDATE)
+			VALUES(#{customer_id},#{customer_pw},#{customer_name},#{customer_phone},#{customer_email},#{customer_address},#{customer_bdate},#{customer_salt},1,SYSDATE,${password_question_list_id},#{password_hint_answer})
 		]]>
 	</insert>
-	<insert id="insertPasswordHint" parameterType="java.util.HashMap">
+	
+	
+	
+	<update id="changePasswordOnly" parameterType="java.util.HashMap">
 		<![CDATA[
-			INSERT INTO password_hint
-			VALUES(#{customer_id},#{password_question_list_id},#{password_hint_answer})
+			UPDATE customer
+			SET customer_pw = #{customer_pw}
+			WHERE customer_id = #{customer_id}
 		]]>
-	</insert>
-	
-	
+	</update>	
 	<update id="changePassword" parameterType="java.util.HashMap">
 		<![CDATA[
 			UPDATE customer
-			SET customer_pw = #{customer_pw}, salt = #{salt} WHERE customer_id = #{customer_id}
-		]]>
-	</update>
-	<update id="changePasswordHint" parameterType="java.util.HashMap">
-		<![CDATA[
-			UPDATE password_hint
-			SET password_question_list_id = #{password_question_list_id}, password_hint_answer = #{password_hint_answer}
+			SET customer_pw = #{customer_pw}, customer_salt = #{customer_salt}, password_question_list_id = #{password_question_list_id}, password_hint_answer = #{password_hint_answer}
 			WHERE customer_id = #{customer_id}
 		]]>
 	</update>
@@ -36,6 +32,8 @@
 			WHERE customer_id = #{customer_id}
 		]]>
 	</update>
+	
+	
 	
 	
 	
@@ -62,14 +60,14 @@
 	</select>
 	<select id="getPasswordQuestion" resultType="String" parameterType="String">
 		<![CDATA[
-			SELECT L.password_question_list_content "password_question_list_content"
-			FROM password_hint H, password_question_list L
-			WHERE H.password_question_list_id = L.password_question_list_id AND H.customer_id = #{customer_id}
+			SELECT P.password_question_list_content "password_question_list_content"
+			FROM customer C, password_question_list P
+			WHERE C.password_question_list_id = P.password_question_list_id AND customer_id = #{customer_id}
 		]]>
 	</select>
-	<select id="getSalt" resultType="String" parameterType="String">
+	<select id="getSalt" resultType="String" parameterType="java.util.HashMap">
 		<![CDATA[
-			SELECT salt "salt"
+			SELECT customer_salt "customer_salt"
 			FROM customer
 			WHERE customer_id = #{customer_id}
 		]]>
@@ -82,9 +80,9 @@
 	</select>
 	<select id="validateAnswer" resultType="String" parameterType="java.util.HashMap">
 		<![CDATA[
-			SELECT C.customer_email "customer_email"
-			FROM password_hint H, customer C
-			WHERE C.customer_id = H.customer_id AND H.customer_id = #{customer_id} AND H.password_hint_answer = #{password_hint_answer}
+			SELECT customer_email "customer_email"
+			FROM customer
+			WHERE password_hint_answer = #{password_hint_answer}
 		]]>
 	</select>
 	<select id="validatePassword" resultType="String" parameterType="java.util.HashMap">
@@ -92,6 +90,27 @@
 			SELECT customer_id "customer_id"
 			FROM customer
 			WHERE customer_id = #{customer_id} AND customer_pw = #{customer_pw}
+		]]>
+	</select>
+	<select id="checkID" resultType="String" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT customer_id "customer_id"
+			FROM customer
+			WHERE customer_id = #{customer_id}
+		]]>
+	</select>
+	<select id="checkPhone" resultType="String" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT customer_phone "customer_phone"
+			FROM customer
+			WHERE customer_phone = #{customer_phone}
+		]]>
+	</select>
+	<select id="checkEmail" resultType="String" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT customer_email "customer_email"
+			FROM customer
+			WHERE customer_email = #{customer_email}
 		]]>
 	</select>
 </mapper>

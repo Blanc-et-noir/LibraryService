@@ -27,11 +27,11 @@
     				<option value="book_isbn">ISBN 코드</option>
     				<option value="book_name">책 제목</option>
     			</select>
-    			<input id="START_DATE" type="date">
+    			<input id="start_date" type="date">
     			<p class="sub" style="width:60px"> ~ </p>
-    			<input id="END_DATE" type="date">
-    			<input id="SEARCH" type="text" name="data">
-    			<input id="SEARCH_BUTTON" type="button" value="검색">
+    			<input id="end_date" type="date">
+    			<input id="search" type="text" name="search">
+    			<input id="search_button" type="button" value="검색">
     		</div>
     		<table id="listTable">
     		</table>

@@ -163,17 +163,16 @@ public class CustomerController {
 				String privatekey = (String) session.getAttribute("privatekey");
 				
 				//비밀번호 찾기 질문에 대한 답 또한 복호화 해야함.
-				String salt = SHA.getSalt();
-				String customer_pw = SHA.DSHA512((RSA2048.decrypt(param.get("customer_pw"), privatekey)).replaceAll(" ", ""),salt);
-				String password_hint_answer = SHA.DSHA512((RSA2048.decrypt(param.get("password_hint_answer"), privatekey)).replaceAll(" ", ""),salt);
+				String customer_salt = SHA.getSalt();
+				String customer_pw = SHA.DSHA512((RSA2048.decrypt(param.get("customer_pw"), privatekey)).replaceAll(" ", ""),customer_salt);
+				String password_hint_answer = SHA.DSHA512((RSA2048.decrypt(param.get("password_hint_answer"), privatekey)).replaceAll(" ", ""),customer_salt);
 				
 				//회원가입에 필요한 정보를 저장하는 객체.
-				param.put("salt", salt);
+				param.put("customer_salt", customer_salt);
 				param.put("customer_pw", customer_pw);
 				param.put("password_hint_answer", password_hint_answer);
 				return new ResponseEntity<HashMap>(customerService.join(param),HttpStatus.OK);
 			} catch (Exception e) {
-				e.printStackTrace();
 				result.put("flag", "false");
 				result.put("content", "회원가입에 실패했습니다.");
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
@@ -195,7 +194,6 @@ public class CustomerController {
 		try {
 			return new ResponseEntity<HashMap>(customerService.getPublicKey(request),HttpStatus.OK);
 		}catch(Exception e) {
-			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "공개키 발급 실패");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);

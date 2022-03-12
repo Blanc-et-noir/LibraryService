@@ -314,9 +314,9 @@ $(document).ready(function(){
     		alert("주소는 공백일 수 없습니다.");
     	}else{
     		$.ajax({
-    			"type":"POST",
+    			"type":"post",
     			"url":"/LibraryService/customer/changeOther.do",
-    			"dataType":"JSON",
+    			"dataType":"json",
     			"data":{
     				"customer_name":customer_name,
     				"customer_bdate":customer_bdate,

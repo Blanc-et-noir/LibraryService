@@ -19,14 +19,14 @@
 <body>
 	<jsp:include page="/WEB-INF/views/sidebar.jsp"></jsp:include>
     <div id="container" style="overflow: scroll;">
-		<div id="MESSAGE_SEND">
+		<div id="message_send">
 			<div class="subtitle">메세지를 받을 사람</div>
-			<input id="CUSTOMER_ID" class="input" type="text" autocomplete="off" placeholder="받을 사람의 ID">
+			<input id="customer_id" class="input" type="text" autocomplete="off" placeholder="받을 사람의 ID">
 			<div style="margin-top:40px;" class="subtitle">메세지 제목</div>
-			<input id="MESSAGE_TITLE" class="input" type="text" autocomplete="off" maxlength="300" placeholder="메세지 제목">
+			<input id="message_title" class="input" type="text" autocomplete="off" maxlength="300" placeholder="메세지 제목">
 			<div style="margin-top:40px;" class="subtitle">메세지 내용</div>
-			<textarea id="MESSAGE_CONTENT" class="input" autocomplete="off" maxlength="3000" placeholder="메세지 내용"></textarea>
-			<input id="MESSAGE_SEND_BUTTON" type="button" value="메세지 보내기">
+			<textarea id="message_content" class="input" autocomplete="off" maxlength="3000" placeholder="메세지 내용"></textarea>
+			<input id="message_send_button" type="button" value="메세지 보내기">
 		</div>
     </div>
 </body>
