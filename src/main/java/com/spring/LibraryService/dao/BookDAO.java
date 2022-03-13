@@ -7,6 +7,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.LibraryService.exception.book.ExhaustedRenewCountException;
+import com.spring.LibraryService.exception.book.InvalidBookISBNException;
+import com.spring.LibraryService.exception.book.InvalidCheckOutIDException;
+import com.spring.LibraryService.exception.book.RunOutOfBookNumberException;
+
 @Repository("bookDAO")
 public class BookDAO implements BookDAOInterface{
 	
@@ -45,10 +50,10 @@ public class BookDAO implements BookDAOInterface{
 	//============================================================================================
 	//해당 도서의 재고량을 1 감소시키는 메소드.
 	//============================================================================================
-	public void decreaseBookNum(HashMap param) throws Exception{
+	public void decreaseBookNum(HashMap param) throws RunOutOfBookNumberException{
 		int num = 0;
 		if((num=sqlSession.update("book.decreaseBookNum",param))==0) {
-			throw new Exception();
+			throw new RunOutOfBookNumberException();
 		}
 	}
 	
@@ -134,8 +139,21 @@ public class BookDAO implements BookDAOInterface{
 	//============================================================================================
 	//자신이 대출한 도서에 대해 반납을 처리하는 메소드.
 	//============================================================================================
-	public void returnBook(HashMap param) throws Exception{
+	public void returnBook(HashMap param) throws ExhaustedRenewCountException{
 		if(sqlSession.delete("book.returnBook", param)==0) {
+			throw new ExhaustedRenewCountException();
+		}
+	}
+	
+	
+	
+	
+	
+	//============================================================================================
+	//자신의 대출 현황에 대해 대출 반납 기한을 7일 연장하는 메소드, 각 대출현황당 2번까지 가능함.
+	//============================================================================================
+	public void renewBookAsAdmin(HashMap param) throws Exception{
+		if(sqlSession.update("book.renewBookAsAdmin", param)==0) {
 			throw new Exception();
 		}
 	}
@@ -147,12 +165,11 @@ public class BookDAO implements BookDAOInterface{
 	//============================================================================================
 	//자신의 대출 현황에 대해 대출 반납 기한을 7일 연장하는 메소드, 각 대출현황당 2번까지 가능함.
 	//============================================================================================
-	public void renewBook(HashMap param) throws Exception{
-		if(sqlSession.update("book.renewBook", param)==0) {
+	public void renewBookAsCustomer(HashMap param) throws Exception{
+		if(sqlSession.update("book.renewBookAsCustomer", param)==0) {
 			throw new Exception();
 		}
-	}
-	
+	}	
 	
 	
 	
@@ -187,4 +204,59 @@ public class BookDAO implements BookDAOInterface{
 			throw new Exception();
 		}
 	}
+	
+	
+	
+	
+	//============================================================================================
+	//연체된 대출정보가 존재하는 사용자들에게 연체 알림 메세지 일괄전송 요청을 처리하는 메소드.
+	//============================================================================================
+	public void checkBookISBN(HashMap param) throws InvalidBookISBNException{
+		if(sqlSession.selectOne("book.checkBookISBN", param)==null) {
+			throw new InvalidBookISBNException();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	//============================================================================================
+	//연체된 대출정보가 존재하는 사용자들에게 연체 알림 메세지 일괄전송 요청을 처리하는 메소드.
+	//============================================================================================
+	public void checkCheckOutID(HashMap param) throws InvalidCheckOutIDException{
+		if(sqlSession.selectOne("book.checkCheckOutID", param)==null) {
+			throw new InvalidCheckOutIDException();
+		}
+	}	
+	
+	
+	
+	
+	
+	//============================================================================================
+	//연체된 대출정보가 존재하는 사용자들에게 연체 알림 메세지 일괄전송 요청을 처리하는 메소드.
+	//============================================================================================
+	public void checkRenewCount(HashMap param) throws ExhaustedRenewCountException{
+		int renewCount=0;
+		System.out.println(param.get("check_out_id")+"체크아웃아이디");
+		if((renewCount = sqlSession.selectOne("book.checkRenewCount", param))>=2) {
+			throw new ExhaustedRenewCountException();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	//============================================================================================
+	//연체된 대출정보가 존재하는 사용자들에게 연체 알림 메세지 일괄전송 요청을 처리하는 메소드.
+	//============================================================================================
+	public void checkBookNumber(HashMap param) throws RunOutOfBookNumberException{
+		if((Integer)sqlSession.selectOne("book.checkBookNumber", param)<1) {
+			throw new RunOutOfBookNumberException();
+		}
+	}	
 }

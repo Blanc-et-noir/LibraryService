@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.spring.LibraryService.exception.customer.InvalidIDException;
 import com.spring.LibraryService.vo.MessageVO;
 
 @Repository("messageDAO")
@@ -66,7 +67,6 @@ public class MessageDAO implements MessageDAOInterface{
 		if((list=sqlSession.selectList("message.receiveMessage", param))==null){
 			throw new Exception();
 		}
-		
 		return list;
 	}
 	
@@ -87,7 +87,8 @@ public class MessageDAO implements MessageDAOInterface{
 			param.put("owner_id", "sender_id");
 			param.put("target_id", "receiver_id");
 		}
-		return sqlSession.selectOne("message.getMessageCount",param);
+		total = sqlSession.selectOne("message.getMessageCount",param);
+		return total;
 	}
 	
 	
@@ -126,5 +127,12 @@ public class MessageDAO implements MessageDAOInterface{
 	
 	
 	
-	
+	//============================================================================================
+	//ID 존재여부 확인
+	//============================================================================================
+	public void checkID(HashMap param) throws InvalidIDException{
+		if(sqlSession.selectOne("message.checkID",param)==null) {
+			throw new InvalidIDException();
+		}
+	}
 }

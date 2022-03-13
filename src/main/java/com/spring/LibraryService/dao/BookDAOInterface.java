@@ -3,8 +3,10 @@ package com.spring.LibraryService.dao;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.spring.LibraryService.exception.book.ExhaustedRenewCountException;
+import com.spring.LibraryService.exception.book.InvalidBookISBNException;
+import com.spring.LibraryService.exception.book.InvalidCheckOutIDException;
+import com.spring.LibraryService.exception.book.RunOutOfBookNumberException;
 
 
 public interface BookDAOInterface {
@@ -98,9 +100,17 @@ public interface BookDAOInterface {
 	
 	
 	//============================================================================================
-	//자신의 대출 현황에 대해 대출 반납 기한을 7일 연장하는 메소드, 각 대출현황당 2번까지 가능함.
+	//도서 대출 반납기한 연장 요청을 처리하는 메소드.
 	//============================================================================================
-	public void renewBook(HashMap param) throws Exception;
+	public void renewBookAsAdmin(HashMap param) throws Exception;
+	
+	
+	
+	
+	//============================================================================================
+	//도서 대출 반납기한 연장 요청을 처리하는 메소드.
+	//============================================================================================
+	public void renewBookAsCustomer(HashMap param) throws Exception;	
 	
 	
 	
@@ -121,4 +131,43 @@ public interface BookDAOInterface {
 	//연체된 대출정보가 존재하는 사용자들에게 연체 알림 메세지 일괄전송 요청을 처리하는 메소드.
 	//============================================================================================
 	public void sendMessage(HashMap param) throws Exception;
+	
+	
+	
+	
+	
+	
+	//============================================================================================
+	//
+	//============================================================================================
+	public void checkBookISBN(HashMap param) throws InvalidBookISBNException;
+	
+	
+	
+	
+	
+	
+	//============================================================================================
+	//연체된 대출정보가 존재하는 사용자들에게 연체 알림 메세지 일괄전송 요청을 처리하는 메소드.
+	//============================================================================================
+	public void checkCheckOutID(HashMap param) throws InvalidCheckOutIDException;
+	
+	
+
+
+
+	//============================================================================================
+	//
+	//============================================================================================
+	public void checkRenewCount(HashMap param) throws ExhaustedRenewCountException;
+	
+	
+	
+	
+	
+	
+	//============================================================================================
+	//연체된 대출정보가 존재하는 사용자들에게 연체 알림 메세지 일괄전송 요청을 처리하는 메소드.
+	//============================================================================================
+	public void checkBookNumber(HashMap param) throws RunOutOfBookNumberException;
 }

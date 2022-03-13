@@ -151,8 +151,8 @@ function getCheckOutList(section,page){
 					}
 					
 					//각 대출에 대해 대출기한 연장, 도서 반납이 가능하도록 함.
-					tr.append("<td><a value='"+result.list[i].check_out_id+"' onClick='renewBook(this)'>연장</a></td>");
-					tr.append("<td><a value='"+result.list[i].check_out_id+"' onClick='returnBook(this)'>반납</a></td>");
+					tr.append("<td><a value='"+result.list[i].check_out_id+"' onClick='renewBook("+result.list[i].check_out_id+","+result.list[i].book_isbn+")'>연장</a></td>");
+					tr.append("<td><a value='"+result.list[i].check_out_id+"' onClick='returnBook("+result.list[i].check_out_id+","+result.list[i].book_isbn+")'>반납</a></td>");
 					$("#listTable").append(tr);
 				}
 				paging(total);
@@ -175,7 +175,7 @@ function getCheckOutList(section,page){
 //============================================================================================
 //도서 반납 요청을 수행하는 메소드.
 //============================================================================================
-function returnBook(obj){
+function returnBook(check_out_id, book_isbn){
 	var flag = confirm("도서를 반납합니다.");
 	if(flag){
 		$.ajax({
@@ -183,7 +183,8 @@ function returnBook(obj){
 			"type":"post",
 			"dataType":"json",
 			"data":{
-				"check_out_id":$(obj).attr("value")
+				"check_out_id":check_out_id,
+				"book_isbn":book_isbn
 			},
 			"success":function(result){
 				if(result.flag!="true"){
@@ -213,7 +214,7 @@ function returnBook(obj){
 //============================================================================================
 //대출기한 연장을 요청하는 메소드.
 //============================================================================================
-function renewBook(obj){
+function renewBook(check_out_id, book_isbn){
 	var flag = confirm("대출기한을 연장합니다.");
 	if(flag){
 		$.ajax({
@@ -221,7 +222,8 @@ function renewBook(obj){
 			"type":"post",
 			"dataType":"json",
 			"data":{
-				"check_out_id":$(obj).attr("value")
+				"check_out_id":check_out_id,
+				"book_isbn":book_isbn
 			},
 			"success":function(result){
 				if(result.flag!="true"){

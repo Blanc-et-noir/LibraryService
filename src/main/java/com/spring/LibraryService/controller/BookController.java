@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.LibraryService.exception.book.ExhaustedRenewCountException;
+import com.spring.LibraryService.exception.book.InvalidBookISBNException;
+import com.spring.LibraryService.exception.book.InvalidCheckOutIDException;
+import com.spring.LibraryService.exception.book.RunOutOfBookNumberException;
 import com.spring.LibraryService.service.BookServiceInterface;
 import com.spring.LibraryService.vo.CustomerVO;
 
@@ -97,7 +101,16 @@ public class BookController {
 			try {
 				result = bookService.checkOut(param);
 				return new ResponseEntity<HashMap>(result,HttpStatus.OK);
+			}catch(InvalidBookISBNException e) {
+				result.put("flag", "false");
+				result.put("content", e.getMessage());
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}catch(RunOutOfBookNumberException e) {
+				result.put("flag", "false");
+				result.put("content", e.getMessage());
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}catch (Exception e) {
+				e.printStackTrace();
 				result.put("flag", "false");
 				result.put("content", "대출 실패");
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
@@ -127,7 +140,15 @@ public class BookController {
 				result.put("flag", "true");
 				result.put("content", "반납 성공");
 				return new ResponseEntity<HashMap>(result,HttpStatus.OK);
-			} catch (Exception e) {
+			}catch(InvalidCheckOutIDException e) {
+				result.put("flag", "false");
+				result.put("content", e.getMessage());
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}catch(InvalidBookISBNException e) {
+				result.put("flag", "false");
+				result.put("content", e.getMessage());
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}catch (Exception e) {
 				result.put("flag", "false");
 				result.put("content", "반납 실패");
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
@@ -146,11 +167,20 @@ public class BookController {
 	public ResponseEntity<HashMap> renewBook(@RequestParam HashMap param,HttpServletRequest request){
 		HashMap result = new HashMap();
 		try {
-			bookService.renewBook(param);
+			bookService.renewBook(param, request);
 			result.put("flag", "true");
 			result.put("content", "연장 성공");
 			return new ResponseEntity<HashMap>(result,HttpStatus.OK);
-		} catch (Exception e) {
+		}catch(InvalidBookISBNException e) {
+			result.put("flag", "false");
+			result.put("content", e.getMessage());
+			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+		}catch(ExhaustedRenewCountException e) {
+			result.put("flag", "false");
+			result.put("content", e.getMessage());
+			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+		}catch (Exception e) {
+			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "연장 실패");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);

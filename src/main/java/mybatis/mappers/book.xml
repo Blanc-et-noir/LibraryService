@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="book">
+	<select id="checkBookNumber" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT book_number "book_number"
+		FROM book
+		WHERE book_isbn = ${book_isbn}
+	</select>
+	<select id="checkRenewCount" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT check_out_renew_count "check_out_renew_count"
+		FROM check_out
+		WHERE check_out_id = ${check_out_id}
+	</select>
+	<select id="checkBookISBN" parameterType="java.util.HashMap" resultType="String">
+		SELECT book_isbn "book_isbn"
+		FROM book
+		WHERE book_isbn = #{book_isbn}
+	</select>
+	<select id="checkCheckOutID" parameterType="java.util.HashMap" resultType="String">
+		SELECT check_out_id "check_out_id"
+		FROM check_out
+		WHERE check_out_id = ${check_out_id}
+	</select>
 	<select id="isOverdue" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		SELECT customer_id "customer_id", NVL(CEIL((SYSDATE-check_out_end_date)),0) "overdue"
 		FROM check_out
@@ -94,14 +114,20 @@
 		]]>
 	</update>
 
-	<update id="renewBook" parameterType="java.util.HashMap">
+	<update id="renewBookAsAdmin" parameterType="java.util.HashMap">
 		<![CDATA[
 			UPDATE check_out
 			SET check_out_end_date = check_out_end_date+7,check_out_renew_count = check_out_renew_count+1
 			WHERE check_out_id = ${check_out_id}
 		]]>
 	</update>
-	
+	<update id="renewBookAsCustomer" parameterType="java.util.HashMap">
+		<![CDATA[
+			UPDATE check_out
+			SET check_out_end_date = check_out_end_date+7,check_out_renew_count = check_out_renew_count+1
+			WHERE check_out_id = ${check_out_id} AND customer_id = #{customer_id}
+		]]>
+	</update>	
 	
 	
 	<insert id="insertCheckOut" parameterType="java.util.HashMap">

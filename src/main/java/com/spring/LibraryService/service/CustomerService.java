@@ -81,7 +81,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//사용자의 회원가입 요청을 처리하는 메소드.
 	//============================================================================================
-	public HashMap<String, String> join(HashMap<String,String> param) throws Exception,	DuplicateIDException, DuplicatePhoneException, DuplicateEmailException{
+	public HashMap<String, String> join(HashMap<String,String> param) throws DuplicateIDException, DuplicatePhoneException, DuplicateEmailException, Exception{
 		HashMap<String,String> result = new HashMap<String,String>();
 		//회원가입하려는 회원 정보를 새로 추가함, 비밀번호 찾기 질문 또한 같이 저장함.
 		
@@ -205,7 +205,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//비밀번호를 변경하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public ResponseEntity<HashMap> changePassword(HashMap<String,String> param, HttpServletRequest request) throws Exception, InvalidPasswordHintAnswerException{
+	public ResponseEntity<HashMap> changePassword(HashMap<String,String> param, HttpServletRequest request) throws InvalidPasswordHintAnswerException,Exception{
 		HashMap result = new HashMap();
 		HttpSession session = request.getSession();
 		String privatekey = (String)session.getAttribute("privatekey");
@@ -243,7 +243,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//기타정보 변경 요청을 처리하는 메소드.
 	//============================================================================================
-	public ResponseEntity<HashMap> changeOther(HashMap<String,String> param, HttpServletRequest request) throws Exception, DuplicatePhoneException, DuplicateEmailException{
+	public ResponseEntity<HashMap> changeOther(HashMap<String,String> param, HttpServletRequest request) throws DuplicatePhoneException, DuplicateEmailException,Exception{
 		HashMap result = new HashMap();
 		HttpSession session = request.getSession();
 		

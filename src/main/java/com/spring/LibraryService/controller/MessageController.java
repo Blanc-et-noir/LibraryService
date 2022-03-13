@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.LibraryService.exception.customer.InvalidIDException;
 import com.spring.LibraryService.service.MessageServiceInterface;
 import com.spring.LibraryService.vo.CustomerVO;
 import com.spring.LibraryService.vo.MessageVO;
@@ -116,6 +117,10 @@ public class MessageController {
 			result.put("flag","true");
 			result.put("content", "메세지 전송 성공");
 			return new ResponseEntity<HashMap>(result,HttpStatus.OK);
+		}catch(InvalidIDException e) {
+			result.put("flag","false");
+			result.put("content", e.getMessage());
+			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 		}catch(Exception e) {
 			result.put("flag","false");
 			result.put("content", "메세지 전송 실패");
@@ -184,7 +189,6 @@ public class MessageController {
 			result.put("content", "메세지 삭제 성공");
 			return new ResponseEntity<HashMap>(result,HttpStatus.OK);
 		}catch(Exception e) {
-			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "메세지 삭제 실패.");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);

@@ -8,10 +8,16 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.LibraryService.dao.MessageDAOInterface;
+import com.spring.LibraryService.exception.customer.InvalidIDException;
 import com.spring.LibraryService.vo.MessageVO;
 
 @Service("messageService")
-@Transactional(propagation=Propagation.REQUIRED,rollbackFor={Exception.class})
+@Transactional(propagation=Propagation.REQUIRED,rollbackFor={
+			Exception.class,
+		
+			InvalidIDException.class
+		}
+)
 public class MessageService implements MessageServiceInterface{
 	@Autowired
 	private MessageDAOInterface messageDAO;
@@ -24,7 +30,10 @@ public class MessageService implements MessageServiceInterface{
 	//============================================================================================
 	//메세지 송신 요청을 처리하는 메소드.
 	//============================================================================================
-	public void sendMessage(HashMap param) throws Exception{
+	public void sendMessage(HashMap param) throws InvalidIDException,Exception{
+		//실제로 존재하는 ID인지 체크
+		messageDAO.checkID(param);
+		
 		//송신 메세지함에 해당 메세지를 추가함.
 		param.put("message_box", "message_sent");
 		messageDAO.sendMessageSent(param);

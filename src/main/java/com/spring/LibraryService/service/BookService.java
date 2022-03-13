@@ -3,17 +3,32 @@ package com.spring.LibraryService.service;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.spring.LibraryService.dao.BookDAOInterface;
+import com.spring.LibraryService.exception.book.ExhaustedRenewCountException;
+import com.spring.LibraryService.exception.book.InvalidBookISBNException;
+import com.spring.LibraryService.exception.book.InvalidCheckOutIDException;
+import com.spring.LibraryService.exception.book.RunOutOfBookNumberException;
+import com.spring.LibraryService.vo.CustomerVO;
 
 @Service("bookService")
 @Transactional(propagation=Propagation.REQUIRED,rollbackFor={
-	Exception.class
-})
+		Exception.class,
+		
+		InvalidBookISBNException.class,
+		InvalidCheckOutIDException.class,
+		
+		RunOutOfBookNumberException.class,
+		
+		ExhaustedRenewCountException.class
+	}
+)
 public class BookService implements BookServiceInterface{
 	
 	
@@ -26,8 +41,13 @@ public class BookService implements BookServiceInterface{
 	//============================================================================================
 	//입력받은 정보를 토대로 도서 대출 신청을 처리하는 메소드.
 	//============================================================================================
-	public HashMap checkOut(HashMap param) throws Exception{
+	public HashMap checkOut(HashMap param) throws InvalidBookISBNException,RunOutOfBookNumberException, Exception{
 		HashMap result = new HashMap();
+		//해당 도서가 있는지 검사
+		bookDAO.checkBookISBN(param);
+		
+		//해당 도서 재고량 여유가 있는지 검사
+		bookDAO.checkBookNumber(param);
 		
 		//해당 사용자의 대출현황이 3개 미만인가 검사.
 		List list = bookDAO.getCheckOutList(param);
@@ -77,13 +97,18 @@ public class BookService implements BookServiceInterface{
 	//============================================================================================
 	//대출한 도서에 대해 반납을 처리하는 메소드.
 	//============================================================================================
-	public void returnBook(HashMap param) throws Exception{
-
+	public void returnBook(HashMap param) throws InvalidBookISBNException, InvalidCheckOutIDException, Exception{
 		//반납하기전 먼저 현재날짜와 반납날짜를 비교함, 연체 여부 확인.
 		HashMap map = bookDAO.isOverdue(param);
 		int overdue = Integer.parseInt(String.valueOf(map.get("overdue")+""));
 		String customer_id = (String)map.get("customer_id");
 
+		//해당 도서가 있는지 검사
+		bookDAO.checkBookISBN(param);
+
+		//해당 대출정보가 있는지 검사
+		bookDAO.checkCheckOutID(param);
+		
 		//연체했으면 사용자의 대출가능시각과 현재날짜중 더 최신의값 + 연체일수 결과를 대출가능시각으로 업데이트.
 		if(overdue>0) {
 			param.put("overdue", overdue);
@@ -105,8 +130,22 @@ public class BookService implements BookServiceInterface{
 	//============================================================================================
 	//도서 대출 반납기한 연장 요청을 처리하는 메소드.
 	//============================================================================================
-	public void renewBook(HashMap param) throws Exception{
-		bookDAO.renewBook(param);
+	public void renewBook(HashMap param, HttpServletRequest request) throws InvalidBookISBNException, ExhaustedRenewCountException, Exception{
+		//해당 도서가 있는지 검사
+		bookDAO.checkBookISBN(param);
+		
+		//연장 횟수가 남아있는지 검사
+		bookDAO.checkRenewCount(param);
+		
+		CustomerVO customer = (CustomerVO)(request.getSession().getAttribute("customer"));
+		if(customer.getKind_number()==0) {
+			//관리자가 연장을 신청
+			bookDAO.renewBookAsAdmin(param);
+		}else {
+			//대출자가 연장을 신청
+			param.put("customer_id", customer.getCustomer_id());
+			bookDAO.renewBookAsCustomer(param);
+		}
 	}
 	
 	

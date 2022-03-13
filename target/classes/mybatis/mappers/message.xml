@@ -23,6 +23,13 @@
 	
 	
 	
+	<select id="checkID" resultType="String" parameterType="java.util.HashMap">
+		<![CDATA[
+			SELECT customer_id "customer_id"
+			FROM customer
+			WHERE customer_id = #{receiver_id}
+		]]>
+	</select>
 	<select id="getMessageCount" parameterType="java.util.HashMap" resultType="Integer">
 		<![CDATA[
 			SELECT COUNT(*)

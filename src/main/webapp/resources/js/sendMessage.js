@@ -62,14 +62,10 @@ $(document).ready(function(){
 					"message_content":message_content
 				},
 				"success":function(result){
-					if(result.flag =="true"){
-						alert(result.content);
-						$("#customer_id").val("");
-						$("#message_title").val("");
-						$("#message_content").val("");
-					}else{
-						alert(result.content);
-					}
+					alert(result.content);
+					$("#customer_id").val("");
+					$("#message_title").val("");
+					$("#message_content").val("");
 				},
 				"error": function(xhr, status, error) {
 					  var err = JSON.parse(xhr.responseText);

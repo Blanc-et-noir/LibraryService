@@ -3,6 +3,7 @@ package com.spring.LibraryService.dao;
 import java.util.HashMap;
 import java.util.List;
 
+import com.spring.LibraryService.exception.customer.InvalidIDException;
 import com.spring.LibraryService.vo.MessageVO;
 
 public interface MessageDAOInterface {
@@ -58,4 +59,13 @@ public interface MessageDAOInterface {
 	//메세지를 읽는 요청을 처리하는 메소드.
 	//============================================================================================
 	public MessageVO readMessage(HashMap<String,String> param) throws Exception;
+
+
+
+
+
+	//============================================================================================
+	//ID 존재여부 확인
+	//============================================================================================
+	public void checkID(HashMap param) throws InvalidIDException;
 }
