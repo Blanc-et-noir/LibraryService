@@ -5,13 +5,13 @@
 	<insert id="sendMessageReceived" parameterType="java.util.HashMap">
 		<![CDATA[
 			INSERT INTO ${message_box}
-			VALUES(MESSAGE_RECEIVED_SEQUENCE.NEXTVAL,#{sender_id},#{receiver_id},#{message_title},#{message_content},SYSDATE)
+			VALUES(message_received_sequence.NEXTVAL,#{sender_id},#{receiver_id},#{message_title},#{message_content},SYSDATE)
 		]]>
 	</insert>
 	<insert id="sendMessageSent" parameterType="java.util.HashMap">
 		<![CDATA[
 			INSERT INTO ${message_box}
-			VALUES(MESSAGE_SENT_SEQUENCE.NEXTVAL,#{sender_id},#{receiver_id},#{message_title},#{message_content},SYSDATE)
+			VALUES(message_sent_sequence.NEXTVAL,#{sender_id},#{receiver_id},#{message_title},#{message_content},SYSDATE)
 		]]>
 	</insert>
 	

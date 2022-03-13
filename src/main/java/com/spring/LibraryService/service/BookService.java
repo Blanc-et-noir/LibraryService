@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.LibraryService.dao.BookDAOInterface;
 
 @Service("bookService")
-@Transactional(propagation=Propagation.REQUIRED,rollbackFor={Exception.class})
+@Transactional(propagation=Propagation.REQUIRED,rollbackFor={
+	Exception.class
+})
 public class BookService implements BookServiceInterface{
 	
 	

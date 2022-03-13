@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +19,35 @@ import org.springframework.transaction.annotation.Transactional;
 import com.spring.LibraryService.dao.CustomerDAOInterface;
 import com.spring.LibraryService.encrypt.RSA2048;
 import com.spring.LibraryService.encrypt.SHA;
+import com.spring.LibraryService.exception.customer.DuplicateEmailException;
+import com.spring.LibraryService.exception.customer.DuplicateIDException;
+import com.spring.LibraryService.exception.customer.DuplicatePhoneException;
+import com.spring.LibraryService.exception.customer.InvalidEmailException;
+import com.spring.LibraryService.exception.customer.InvalidIDException;
+import com.spring.LibraryService.exception.customer.InvalidPasswordException;
+import com.spring.LibraryService.exception.customer.InvalidPasswordHintAnswerException;
+import com.spring.LibraryService.exception.customer.InvalidPhoneException;
 import com.spring.LibraryService.vo.CustomerVO;
 
 @Service("customerService")
-@Transactional(propagation=Propagation.REQUIRED, rollbackFor= {Exception.class})
+@Transactional(
+	propagation=Propagation.REQUIRED, 
+	rollbackFor= {
+		Exception.class,
+		
+		DuplicateIDException.class,
+		DuplicatePhoneException.class,
+		DuplicateEmailException.class,
+		
+		InvalidIDException.class,
+		InvalidPhoneException.class,
+		InvalidEmailException.class,
+		InvalidPasswordException.class,
+		InvalidPasswordHintAnswerException.class,
+		
+		MailSendException.class
+	}
+)
 public class CustomerService implements CustomerServiceInterface{
 	@Autowired
 	private CustomerDAOInterface customerDAO;
@@ -55,7 +81,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//사용자의 회원가입 요청을 처리하는 메소드.
 	//============================================================================================
-	public HashMap<String, String> join(HashMap<String,String> param) throws Exception{
+	public HashMap<String, String> join(HashMap<String,String> param) throws Exception,	DuplicateIDException, DuplicatePhoneException, DuplicateEmailException{
 		HashMap<String,String> result = new HashMap<String,String>();
 		//회원가입하려는 회원 정보를 새로 추가함, 비밀번호 찾기 질문 또한 같이 저장함.
 		
@@ -92,7 +118,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//가입한 전화번호로 사용자의 ID를 조회하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public ResponseEntity<HashMap> findByPhone(HashMap<String,String> param) throws Exception{
+	public ResponseEntity<HashMap> findByPhone(HashMap<String,String> param) throws InvalidPhoneException, Exception{
 		HashMap result = new HashMap();
 		result.put("flag", "true");
 		result.put("content", "아이디 조회 성공 : "+customerDAO.findByPhone(param));
@@ -107,7 +133,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//가입한 이메일로 사용자의 ID를 조회하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public ResponseEntity<HashMap> findByEmail(HashMap<String,String> param) throws Exception{
+	public ResponseEntity<HashMap> findByEmail(HashMap<String,String> param) throws InvalidEmailException, Exception{
 		HashMap result = new HashMap();
 		result.put("flag", "true");
 		result.put("content", "아이디 조회 성공 : "+customerDAO.findByEmail(param));
@@ -122,7 +148,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//사용자가 설정한 자신의 비밀번호 찾기 질문을 반환하는 메소드.
 	//============================================================================================
-	public ResponseEntity<HashMap> getPasswordQuestion(HashMap<String,String> param) throws Exception{
+	public ResponseEntity<HashMap> getPasswordQuestion(HashMap<String,String> param) throws InvalidIDException, Exception{
 		HashMap result = new HashMap();
 		result.put("flag", "true");
 		result.put("content", "질문 조회 성공");
@@ -138,7 +164,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//비밀번호 찾기 질문에 대한 답을 검증하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public ResponseEntity<HashMap> validateAnswer(HashMap<String,String> param,HttpServletRequest request) throws Exception{
+	public ResponseEntity<HashMap> validateAnswer(HashMap<String,String> param,HttpServletRequest request) throws InvalidIDException, Exception{
 		HashMap result = new HashMap();
 		HttpSession session = request.getSession();
 		
@@ -155,9 +181,6 @@ public class CustomerService implements CustomerServiceInterface{
 		param.put("password_hint_answer", password_hint_answer);
 		
 		String customer_email = customerDAO.validateAnswer(param);
-		//해당 임시 비밀번호로 사용자의 비밀번호를 변경하고, 솔트값을 새로 설정함.
-		//사용자가 가입할때 사용한 이메일 주소로 임시 비밀번호를 전달함.
-		
 		String customer_pw = SHA.DSHA512(SHA.getSalt(),SHA.getSalt()).substring(0,16);
 		
 		param.put("customer_pw", SHA.DSHA512(customer_pw, customer_salt));
@@ -167,7 +190,6 @@ public class CustomerService implements CustomerServiceInterface{
 		param.put("to", customer_email);
 		param.put("subject", "임시 비밀번호");
 		param.put("text", customer_id+"에 대한 임시 비밀번호는 "+customer_pw+" 입니다.");
-		
 		mailService.sendMail(param);
 		
 		result.put("flag", "true");
@@ -183,7 +205,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//비밀번호를 변경하는 요청을 처리하는 메소드.
 	//============================================================================================
-	public ResponseEntity<HashMap> changePassword(HashMap<String,String> param, HttpServletRequest request) throws Exception{
+	public ResponseEntity<HashMap> changePassword(HashMap<String,String> param, HttpServletRequest request) throws Exception, InvalidPasswordHintAnswerException{
 		HashMap result = new HashMap();
 		HttpSession session = request.getSession();
 		String privatekey = (String)session.getAttribute("privatekey");
@@ -191,7 +213,7 @@ public class CustomerService implements CustomerServiceInterface{
 		String customer_pw_new = param.get("customer_pw");
 		//솔트 값을 얻어서 해당 솔트 값으로 기존 비밀번호를 SHA512로 더블 해싱한 결과가 DB에 저장된 더블 해싱된 비밀번호와 일치해야 비밀번호 변경함. 
 		
-		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(param.get("customer_pw_old"), privatekey).replace(" ", ""), customer_salt));
+		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(param.get("customer_pw_old"), privatekey).replaceAll(" ", ""), customer_salt));
 		customerDAO.validatePassword(param);
 		
 		String newCustomer_salt = SHA.getSalt();
@@ -202,8 +224,8 @@ public class CustomerService implements CustomerServiceInterface{
 		//보안상 복호화가 불가능해야함.
 		
 		param.put("customer_salt", newCustomer_salt);
-		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(customer_pw_new, privatekey).replace(" ", ""), newCustomer_salt));
-		param.put("password_hint_answer", SHA.DSHA512(RSA2048.decrypt(param.get("password_hint_answer").replace(" ", ""), privatekey),newCustomer_salt));
+		param.put("customer_pw", SHA.DSHA512(RSA2048.decrypt(customer_pw_new, privatekey).replaceAll(" ", ""), newCustomer_salt));
+		param.put("password_hint_answer", SHA.DSHA512(RSA2048.decrypt(param.get("password_hint_answer"), privatekey).replaceAll(" ", ""),newCustomer_salt));
 		customerDAO.changePassword(param);
 		
 		session.invalidate();
@@ -221,7 +243,7 @@ public class CustomerService implements CustomerServiceInterface{
 	//============================================================================================
 	//기타정보 변경 요청을 처리하는 메소드.
 	//============================================================================================
-	public ResponseEntity<HashMap> changeOther(HashMap<String,String> param, HttpServletRequest request) throws Exception{
+	public ResponseEntity<HashMap> changeOther(HashMap<String,String> param, HttpServletRequest request) throws Exception, DuplicatePhoneException, DuplicateEmailException{
 		HashMap result = new HashMap();
 		HttpSession session = request.getSession();
 		
@@ -243,6 +265,9 @@ public class CustomerService implements CustomerServiceInterface{
 		}else {
 			CustomerVO customer = (CustomerVO)session.getAttribute("customer");
 			param.put("customer_id", customer.getCustomer_id());
+			
+			customerDAO.checkPhone(param);
+			customerDAO.checkEmail(param);
 			customerDAO.changeOther(param);
 			
 			//기타 정보 변경에 성공하면 세션을 강제로 종료함
@@ -308,9 +333,11 @@ public class CustomerService implements CustomerServiceInterface{
 		//변환된 공개키, 비밀키를 세션에 저장하고 공개키만 리턴함.
 		try {
 			HttpSession session = request.getSession(true);
+			
 			KeyPair keypair = RSA2048.createKey();
 			Key privatekey = keypair.getPrivate();
 			Key publickey = keypair.getPublic();
+			
 			session.setAttribute("privatekey", RSA2048.keyToString(privatekey));
 			session.setAttribute("publickey", RSA2048.keyToString(publickey));
 			

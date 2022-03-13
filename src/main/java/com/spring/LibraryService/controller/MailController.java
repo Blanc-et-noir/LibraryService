@@ -8,11 +8,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSendException;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.LibraryService.encrypt.SHA;
 import com.spring.LibraryService.service.MailServiceInterface;
@@ -59,8 +59,11 @@ public class MailController {
 			result.put("flag", "true");
 			result.put("content", "해당 이메일로 인증번호를 전송했습니다.");
 			return new ResponseEntity<HashMap>(result,HttpStatus.OK);
+		}catch(MailSendException e) {
+			result.put("flag", "false");
+			result.put("content", "이메일주소가 잘못되었습니다.");
+			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 		}catch(Exception e) {
-			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "인증번호 전송과정에서 오류가 발생했습니다.");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);

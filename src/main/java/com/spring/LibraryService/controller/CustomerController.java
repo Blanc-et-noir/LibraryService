@@ -2,6 +2,7 @@ package com.spring.LibraryService.controller;
 
 import java.util.HashMap;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -9,14 +10,22 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.LibraryService.encrypt.RSA2048;
 import com.spring.LibraryService.encrypt.SHA;
+import com.spring.LibraryService.exception.customer.DuplicateEmailException;
+import com.spring.LibraryService.exception.customer.DuplicateIDException;
+import com.spring.LibraryService.exception.customer.DuplicatePhoneException;
+import com.spring.LibraryService.exception.customer.InvalidEmailException;
+import com.spring.LibraryService.exception.customer.InvalidIDException;
+import com.spring.LibraryService.exception.customer.InvalidPasswordException;
+import com.spring.LibraryService.exception.customer.InvalidPasswordHintAnswerException;
+import com.spring.LibraryService.exception.customer.InvalidPhoneException;
 import com.spring.LibraryService.service.CustomerServiceInterface;
 import com.spring.LibraryService.vo.CustomerVO;
 
@@ -172,9 +181,21 @@ public class CustomerController {
 				param.put("customer_pw", customer_pw);
 				param.put("password_hint_answer", password_hint_answer);
 				return new ResponseEntity<HashMap>(customerService.join(param),HttpStatus.OK);
-			} catch (Exception e) {
+			}catch(DuplicateIDException e) {
+				result.put("content", e.getMessage());
 				result.put("flag", "false");
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}catch(DuplicatePhoneException e) {
+				result.put("content", e.getMessage());
+				result.put("flag", "false");
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}catch(DuplicateEmailException e) {
+				result.put("content", e.getMessage());
+				result.put("flag", "false");
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}catch (Exception e) {
 				result.put("content", "회원가입에 실패했습니다.");
+				result.put("flag", "false");
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}
 		}
@@ -244,14 +265,22 @@ public class CustomerController {
 		if(flag.equals("find_by_phone")) {
 			try {
 				return customerService.findByPhone(param);
+			}catch(InvalidPhoneException e) {
+				result.put("flag", "false");
+				result.put("content", e.getMessage());
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}catch(Exception e) {
 				result.put("flag", "false");
-				result.put("content", "회원정보 없음");
+				result.put("content", "해당 전화번호로 가입된 회원정보가 없습니다.");
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}
 		}else if(flag.equals("find_by_email")) {
 			try {
 				return customerService.findByEmail(param);
+			}catch(InvalidEmailException e) {
+				result.put("flag", "false");
+				result.put("content", e.getMessage());
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}catch(Exception e) {
 				result.put("flag", "false");
 				result.put("content", "회원정보 없음");
@@ -260,6 +289,10 @@ public class CustomerController {
 		}else if(flag.equals("get_question_button")) {
 			try {
 				return customerService.getPasswordQuestion(param);
+			}catch(InvalidIDException e) {
+				result.put("flag", "false");
+				result.put("content", e.getMessage());
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}catch(Exception e) {
 				result.put("flag", "false");
 				result.put("content", "회원정보 없음");
@@ -268,9 +301,25 @@ public class CustomerController {
 		}else {
 			try {
 				return customerService.validateAnswer(param,request);
-			}catch(Exception e) {
+			}catch(InvalidPasswordHintAnswerException e) {
+				e.printStackTrace();
 				result.put("flag", "false");
-				result.put("content", "오답");
+				result.put("content", e.getMessage());
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}catch(MessagingException e) {
+				e.printStackTrace();
+				result.put("flag", "false");
+				result.put("content", "이메일전송중 오류가 발생했습니다.");
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}catch(MailSendException e) {
+				e.printStackTrace();
+				result.put("flag", "false");
+				result.put("content", "이메일전송중 오류가 발생했습니다.\n이메일주소를 다시 확인하세요.");
+				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+			}catch(Exception e) {
+				e.printStackTrace();
+				result.put("flag", "false");
+				result.put("content", "비밀번호 변경에 실패했습니다.");
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}
 		}
@@ -289,8 +338,15 @@ public class CustomerController {
 		HashMap result = new HashMap();
 		try {
 			return customerService.changePassword(param, request);
+		}catch(InvalidPasswordException e) {
+			result.put("flag", "false");
+			result.put("content", e.getMessage());
+			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+		}catch(InvalidPasswordHintAnswerException e) {
+			result.put("flag", "false");
+			result.put("content", e.getMessage());
+			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 		}catch(Exception e) {
-			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "회원정보 변경에 실패했습니다.");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
@@ -310,8 +366,19 @@ public class CustomerController {
 		HashMap result = new HashMap();
 		try {
 			return customerService.changeOther(param,request);
+		}catch(DuplicatePhoneException e) {
+			result.put("flag", "false");
+			result.put("content", e.getMessage());
+			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+		}catch(DuplicateEmailException e) {
+			result.put("flag", "false");
+			result.put("content", e.getMessage());
+			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
+		}catch(InvalidPasswordHintAnswerException e) {
+			result.put("flag", "false");
+			result.put("content", e.getMessage());
+			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 		}catch(Exception e) {
-			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "회원정보 변경에 실패했습니다.");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
