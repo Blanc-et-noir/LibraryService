@@ -16,7 +16,7 @@
     background-color:var(--c4);
     color:var(--c8);
 }
-#JOIN_BUTTON{
+#join_button{
 	margin-top:30px;
     width: 100%;
     height: 60px;
@@ -27,7 +27,7 @@
     color:white;
     background-color:var(--c2);
 }
-#JOIN_BUTTON:hover{
+#join_button:hover{
 	color:white;
     background-color:var(--c3);
 }
@@ -35,15 +35,15 @@
 	color:var(--c5);
 }
 
-#EMAIL{
+#email{
 	display:flex;
 }
-#EMAIL input{
+#email input{
 	width:50%;
 	height:30px;
 	color:var(--c8);
 	background-color:transparent;
 }
-#EMAIL input:hover{
+#email input:hover{
 	color:var(--c2);
 }

@@ -50,14 +50,12 @@ $(document).ready(function(){
 			"success":function(result){
 				//메세지 체크상태를 해제함.
 				checkAll=false;
-				if(result.flag=="true"){
+				if(result.flag=="true"&&result.total>0){
 					var total = result.total;
 					var list = result.list;
 					var i;
 					$("#list").empty();
 					$("#list").append("<tr class='row'><th class='col' id='select_all_button'>전체</th><th class='col' id='flag'>"+(message_box=="message_received"?"송신자":"수신자")+"</th><th id='title' class='col'>제목</th><th id='date' class='col'>보낸시각</th></tr>");
-					
-					console.log(message_box);
 					
 					for(i=0;i<list.length;i++){
 						var recent = isRecent(list[i].message_date_string);
@@ -89,16 +87,15 @@ $(document).ready(function(){
 					paging(total);					
 				}else{
 					$("#list").empty();
-					$("#list").append("<tr class='row'><td class='col' id='select_all_button'>전체</td><td class='col' id='flag'>"+(message_box=="message_received"?"송신자":"수신자")+"</td><td id='title' class='col'>제목</td><td id='date' class='col'>보낸시각</td></tr>");
+					$("#list").append("<tr class='row'><th class='col' id='select_all_button'>전체</th><th class='col' id='flag'>"+(message_box=="message_received"?"송신자":"수신자")+"</th><th id='title' class='col'>제목</th><th id='date' class='col'>보낸시각</th></tr>");
 					var tr = $("<tr></tr>");
-					tr.append("<td colspan=4>"+result.content+"</td>");
+					tr.append("<td colspan=4>메세지가 없습니다.</td>");
 					$("#list").append(tr);
 					paging(0);
 				}
 			},
 			"error": function(xhr, status, error) {
-				  var err = JSON.parse(xhr.responseText);
-				  alert(err.content);
+				openPopup(JSON.parse(xhr.responseText).content);
 	  		}
 		});
 	}
@@ -115,7 +112,7 @@ $(document).ready(function(){
 		var message_id="";
 		var i;
 		if(message.length==0){
-			alert("삭제할 메세지를 선택해야합니다.");
+			openPopup("삭제할 메세지를 선택해야 합니다.");
 			return;
 		}
 		
@@ -158,8 +155,7 @@ $(document).ready(function(){
 				}
 			},
 			"error": function(xhr, status, error) {
-				  var err = JSON.parse(xhr.responseText);
-				  alert(err.content);
+				openPopup(JSON.parse(xhr.responseText).content);
 	  		}
 		});
 	}

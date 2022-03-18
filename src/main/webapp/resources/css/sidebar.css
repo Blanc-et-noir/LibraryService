@@ -76,6 +76,15 @@ textarea:-ms-input-placeholder {color:var(--c8);}
 	z-index:200;
 	position:fixed;
 }
+#popupCover{
+	width:100%;
+	height:100%;
+	background-color:black;
+	opacity:0;
+	display:none;
+	z-index:400;
+	position:fixed;
+}
 #sideContent{
     width: 100%;
     height: 100%;
@@ -307,4 +316,43 @@ textarea:-ms-input-placeholder {color:var(--c8);}
     font-size: 12px;
     background-color:var(--c4);
     color:var(--c8);
+}
+
+#popup{
+	width:300px;
+	height:160px;
+	position:fixed;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+	background-color:var(--c6);
+	border:2px solid var(--c2);
+	z-index:500;
+}
+#popupMessage{
+	width:90%;
+	height:90px;
+	display:block;
+	position:absolute;
+	top:10%;
+	left:50%;
+	transform:translate(-50%,-10%);
+	color:var(--c8);
+	text-align:center;
+	padding:10px;
+}
+#popupButton{
+	width:120px;
+	height:40px;
+	position:absolute;
+	top:90%;
+	left:50%;
+	transform:translate(-50%,-90%);
+	background-color:var(--c2);
+	color:white;
+	text-align:center;
+	line-height:40px;
+}
+#popupButton:hover{
+	background-color:var(--c3);
 }

@@ -159,8 +159,7 @@ function getCheckOutList(section,page){
 			}
 		},
 		"error": function(xhr, status, error) {
-			var err = JSON.parse(xhr.responseText);
-			alert(err.content);
+			openPopup(JSON.parse(xhr.responseText).content);
 			section=1;
 			page=1;
 			search=$("#search").val();
@@ -176,35 +175,31 @@ function getCheckOutList(section,page){
 //도서 반납 요청을 수행하는 메소드.
 //============================================================================================
 function returnBook(check_out_id, book_isbn){
-	var flag = confirm("도서를 반납합니다.");
-	if(flag){
-		$.ajax({
-			"url":"/LibraryService/book/returnBook.do",
-			"type":"post",
-			"dataType":"json",
-			"data":{
-				"check_out_id":check_out_id,
-				"book_isbn":book_isbn
-			},
-			"success":function(result){
-				if(result.flag!="true"){
-					alert(result.content);
-				}else{
-					section = 1;
-					page = 1;
-					getCheckOutList(section,page);
-				}
-			},
-			"error": function(xhr, status, error) {
-				var err = JSON.parse(xhr.responseText);
-				alert(err.content);
-				section=1;
-				page=1;
-				search=$("#search").val();
+	$.ajax({
+		"url":"/LibraryService/book/returnBook.do",
+		"type":"post",
+		"dataType":"json",
+		"data":{
+			"check_out_id":check_out_id,
+			"book_isbn":book_isbn
+		},
+		"success":function(result){
+			if(result.flag!="true"){
+				openPopup(result.content);
+			}else{
+				section = 1;
+				page = 1;
 				getCheckOutList(section,page);
-	  		}
-		});
-	}
+			}
+		},
+		"error": function(xhr, status, error) {
+			openPopup(JSON.parse(xhr.responseText).content);
+			section=1;
+			page=1;
+			search=$("#search").val();
+			getCheckOutList(section,page);
+  		}
+	});
 }
 
 
@@ -215,35 +210,31 @@ function returnBook(check_out_id, book_isbn){
 //대출기한 연장을 요청하는 메소드.
 //============================================================================================
 function renewBook(check_out_id, book_isbn){
-	var flag = confirm("대출기한을 연장합니다.");
-	if(flag){
-		$.ajax({
-			"url":"/LibraryService/book/renewBook.do",
-			"type":"post",
-			"dataType":"json",
-			"data":{
-				"check_out_id":check_out_id,
-				"book_isbn":book_isbn
-			},
-			"success":function(result){
-				if(result.flag!="true"){
-					alert(result.content);
-				}else{
-					section = 1;
-					page = 1;
-					getCheckOutList(section,page);
-				}
-			},
-			"error": function(xhr, status, error) {
-				var err = JSON.parse(xhr.responseText);
-				alert(err.content);
-				section=1;
-				page=1;
-				search=$("#search").val();
+	$.ajax({
+		"url":"/LibraryService/book/renewBook.do",
+		"type":"post",
+		"dataType":"json",
+		"data":{
+			"check_out_id":check_out_id,
+			"book_isbn":book_isbn
+		},
+		"success":function(result){
+			if(result.flag!="true"){
+				openPopup(result.content);
+			}else{
+				section = 1;
+				page = 1;
 				getCheckOutList(section,page);
-	  		}
-		});
-	}
+			}
+		},
+		"error": function(xhr, status, error) {
+			openPopup(JSON.parse(xhr.responseText).content);
+			section=1;
+			page=1;
+			search=$("#search").val();
+			getCheckOutList(section,page);
+  		}
+	});
 }
 
 
@@ -344,11 +335,10 @@ $(document).ready(function(){
 				"type":"post",
 				"dataType":"json",
 				"success":function(result){
-					alert(result.content);
+					openPopup(result.content);
 				},
 				"error": function(xhr, status, error) {
-					var err = JSON.parse(xhr.responseText);
-					alert(err.content);
+					openPopup(JSON.parse(xhr.responseText).content);
 					
 					section = 1;
 					page = 1;

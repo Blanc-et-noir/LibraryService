@@ -1,7 +1,87 @@
 //도서 대출 메뉴가 활성화 되었는지 여부를 나타냄.
 var open = false;
+var popupFlag = false;
 
 
+function check(str) {
+	var regExp = /^[a-z0-9_]{8,16}$/;		
+	if(str.length==0||!regExp.test(str)) {
+		return false; 
+	} else { 
+		return true; 
+	} 
+}
+
+function checkISBN(str){
+	var regExp = /[0-9]{13,13}$/;
+	if(str.length!=13||!regExp.text(str)){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+
+
+
+//============================================================================================
+//해당 문자열이 010-0000-0000과 같이 전화번호의 형식으로 되어있는지 확인하는 메소드.
+//============================================================================================
+function checkPhone(str) {
+	var regExp = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/;
+	if(str.length==0||!regExp.test(str)) {
+		return false; 
+	} else { 
+		return true; 
+	} 
+}
+
+
+
+
+
+//============================================================================================
+//해당 문자열이 aaaaaa@aaaaaa.com과 같이 이메일의 형식으로 되어있는지 확인하는 메소드.
+//============================================================================================
+function checkEmail(str) {
+	var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+	if(str.length==0||!regExp.test(str)) {
+		return false; 
+	} else { 
+		return true; 
+	} 
+}
+
+function openPopup(str){
+	if(popupFlag==false){
+		popupFlag=true;
+		var popup = "<div id='popup'><p id='popupMessage'>"+str+"</p><div id='popupButton' onclick='closePopup();'>확인</div></div>";
+    	$("#popupCover").css({
+    		"display":"block"
+    	})
+    	$("#popupCover").animate({
+            "opacity":"0.5"
+        },0,"easeInOutExpo",function(){
+        	$("body").append(popup);
+        });
+    	
+	}
+}
+function closePopup(){
+	if(popupFlag==true){
+		popupFlag=false;
+		$("#popup").remove();
+		
+    	$("#popupCover").animate({
+            "opacity":"0"
+        },0,"easeInOutExpo",function(){
+        	$("#popupCover").css({
+        		"display":"none"
+        	})
+        });
+    	
+	}
+}
 
 
 //============================================================================================
@@ -41,10 +121,13 @@ $(document).ready(function(){
 	//파라미터로 사용자 ID와 도서 ISBN 코드가 필요.
 	//============================================================================================
 	$(document).on("click","#check_out_button",function(){
-		if($("#check_out_customer_id").val().length == 0){
-			alert("사용자 ID를 입력해야합니다.");
-		}else if($("#check_out_book_isbn").val().length == 0){
-			alert("ISBN 코드를 입력해야합니다.");
+		var check_out_book_isbn = $("#check_out_book_isbn").val();
+		var check_out_customer_id = $("#check_out_customer_id").val();
+		
+		if(!check(check_out_customer_id)){
+			openPopup("아이디는 알파벳과 숫자로 8자리이상 16자리이하로 구성해야 합니다.");
+		}else if(!checkISBN(check_out_book_isbn)){
+			openPopup("ISBN코드는 13자리의 숫자로 구성해야 합니다.");
 		}else{
 			$.ajax({
 				"url":"/LibraryService/book/checkOut.do",
@@ -54,11 +137,11 @@ $(document).ready(function(){
 					"book_isbn":$("#check_out_book_isbn").val()
 				},
 				"success":function(result){
-					alert(result.content);
+					openPopup(result.content);
 					$("#check_out_book_isbn").val("");
 				},
 				"error":function(xhr, status, error){
-	    			alert(JSON.parse(xhr.responseText).content);
+					openPopup(JSON.parse(xhr.responseText).content);
 				}
 			})
 		}

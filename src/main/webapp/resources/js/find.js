@@ -38,8 +38,16 @@ $(document).ready(function(){
 		var customer_email = $("#customer_email").val();
 		var password_hint_answer = $("#password_hint_answer").val();
 		
-		
-		
+		if(flag=="find_by_phone"&&!checkPhone(customer_phone)){
+			openPopup("전화번호 형식이 잘못되었습니다.");
+			return;
+		}else if(flag=="find_by_email"&&!checkEmail(customer_email)){
+			openPopup("이메일 형식이 잘못되었습니다.");
+			return;
+		}else if(flag=="get_question_button"&&!check(customer_id)){
+			openPopup("비밀번호를 찾을 아이디 형식이 잘못되었습니다.");
+			return;
+		}
 		
 		//============================================================================================
 		//백엔드 서버로부터 RSA2048 공개키를 얻음.
@@ -70,27 +78,26 @@ $(document).ready(function(){
     				"success":function(result){
     					//이미 로그인 된 상태라면 굳이 아이디, 비밀번호를 찾을 필요 없으므로 오류처리.
     					if(flag=="find_by_phone"){
-    						alert(result.content);
+    						openPopup(result.content);
     					}else if(flag=="find_by_email"){
-    						alert(result.content);
+    						openPopup(result.content);
     					}else if(flag=="get_question_button"){
     						$("#password_question_list_content").text(result.password_question);
     					}else{
     						//비밀번호 찾기 질문에 대한 답이 만약 맞았다면, 백엔드 서버에서 가입한 이메일로 임시 비밀번호를 전달.
     						//클라이언트는 해당 비밀번호로 로그인후 비밀번호를 변경해야함.
     						//비밀번호를 단방향 해시함수와 솔트값을 이용해 더블 해싱했으므로 복호화가 불가능함.
-    						alert(result.content);
+    						openPopup(result.content);
     					}
     				},
     				"error":function(xhr, status, error){
-    	    			alert(JSON.parse(xhr.responseText).content);
+    	    			openPopup(JSON.parse(xhr.responseText).content);
     				}
     			});
     		},
     		"error":function(xhr, status, error){
-    			alert(JSON.parse(xhr.responseText).content);
+    			openPopup(JSON.parse(xhr.responseText).content);
     		}
     	});
 	});
-	
 })

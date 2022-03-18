@@ -16,6 +16,7 @@
     <title>사이드바</title>
 </head>
 <body>
+	<div id="popupCover"></div>
 	<div id="cover"></div>
 	<div id="sidebar">
 		<div id="sidebarbutton">☰</div>

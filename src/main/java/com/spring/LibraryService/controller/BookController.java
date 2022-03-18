@@ -110,7 +110,6 @@ public class BookController {
 				result.put("content", e.getMessage());
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}catch (Exception e) {
-				e.printStackTrace();
 				result.put("flag", "false");
 				result.put("content", "대출 실패");
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
@@ -180,7 +179,6 @@ public class BookController {
 			result.put("content", e.getMessage());
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 		}catch (Exception e) {
-			e.printStackTrace();
 			result.put("flag", "false");
 			result.put("content", "연장 실패");
 			return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);

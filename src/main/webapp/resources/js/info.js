@@ -1,51 +1,4 @@
-$(document).ready(function(){
-	
-	
-	
-	
-	//============================================================================================
-	//해당 문자열이 알파벳과 숫자로만 8자리 이상 16자리 이하로 구성되어있는지 확인하는 메소드.
-	//============================================================================================
-	function check(str) {
-		var regExp = /^[a-z0-9_]{8,16}$/;		
-		if(!regExp.test(str)) {
-			return false; 
-		} else { 
-			return true; 
-		} 
-	}
-
-	
-	
-	
-	//============================================================================================
-	//해당 문자열이 010-0000-0000과 같은 형태로 구성되어있는지 확인하는 메소드.
-	//============================================================================================
-	function checkPhone(str) {
-		var regExp = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/;
-		if(!regExp.test(str)) {
-			return false; 
-		} else { 
-			return true; 
-		} 
-	}
-	
-	
-	
-	
-	
-	//============================================================================================
-	//해당 문자열이 aaaaaa@aaaaaa.com과 같은 형태로 구성되어있는지 확인하는 메소드.
-	//============================================================================================
-	function checkEmail(str) {
-		var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-		if(!regExp.test(str)) {
-			return false; 
-		} else { 
-			return true; 
-		} 
-	}
-	
+$(document).ready(function(){	
 	//오늘 날짜를 YYYY-MM-DD의 형식으로 계산후, 해당 날짜 이후로의 날짜를 선택하지 못하도록 datelimit으로 설정함.
 	//예를들어, 생년월일은 당연히 오늘날짜 이후로 설정할 수 없어야 함.
     var today = new Date();
@@ -86,8 +39,7 @@ $(document).ready(function(){
     		}
     	},
 		"error": function(xhr, status, error) {
-			  var err = JSON.parse(xhr.responseText);
-			  alert(err.content);
+			openPopup(JSON.parse(xhr.responseText).content);
 		}
     });
     
@@ -107,11 +59,10 @@ $(document).ready(function(){
     			"customer_email":$("#customer_email").val()
     		},
     		"success":function(result){
-    			alert(result.content);
+    			openPopup(result.content);
     		},
     		"error": function(xhr, status, error) {
-  			  var err = JSON.parse(xhr.responseText);
-  			  alert(err.content);
+    			openPopup(JSON.parse(xhr.responseText).content);
     		}
     	})
     })
@@ -132,11 +83,10 @@ $(document).ready(function(){
     			"email_authcode":$("#email_authcode").val()
     		},
     		"success":function(result){
-    			alert(result.content);
+    			openPopup(result.content);
     		},
     		"error": function(xhr, status, error) {
-  			  var err = JSON.parse(xhr.responseText);
-  			  alert(err.content);
+    			openPopup(JSON.parse(xhr.responseText).content);
     		}
     	})
     })
@@ -193,11 +143,11 @@ $(document).ready(function(){
 		var password_hint_answer = $("#password_hint_answer").val();
     
 		if(!check(customer_pw)){
-    		alert("비밀번호는 알파벳과 숫자로 8자리이상 16자리이하로 구성해야 합니다.");
+			openPopup("비밀번호는 알파벳과 숫자로 8자리이상 16자리이하로 구성해야 합니다.");
     	}else if(customer_pw != customer_pw_check){
-			alert("비밀번호가 서로 일치하지 않습니다.");
+    		openPopup("비밀번호가 서로 일치하지 않습니다.");
     	}else if(password_hint_answer.length == 0){
-    		alert("비밀번호 찾기 질문에 대한 답은 공백일 수 없습니다.");
+    		openPopup("비밀번호 찾기 질문에 대한 답은 공백일 수 없습니다.");
     	}else{
     		
     		
@@ -235,21 +185,19 @@ $(document).ready(function(){
         			    	$("#customer_pw_check").attr("disabled",true);
         			    	$("#password_question_list_id").attr("disabled",true);
         			    	$("#password_hint_answer").attr("disabled",true);
-        					alert(result.content);
+        			    	openPopup(result.content);
         					
             				var form = $("<form method='post' action='/LibraryService/customer/mainForm.do'></form>");
             				$("body").append(form);
             				form.submit();
             			},
                 		"error": function(xhr, status, error) {
-              			  var err = JSON.parse(xhr.responseText);
-              			  alert(err.content);
+                			openPopup(JSON.parse(xhr.responseText).content);
                 		}
             		});
         		},
         		"error": function(xhr, status, error) {
-      			  var err = JSON.parse(xhr.responseText);
-      			  alert(err.content);
+        			openPopup(JSON.parse(xhr.responseText).content);
         		}
         	});
         }
@@ -304,14 +252,15 @@ $(document).ready(function(){
     	var customer_phone = $("#customer_phone").val();
     	var customer_email = $("#customer_email").val();
     	var customer_address = $("#customer_address").val();
+    	
     	if(customer_name.length == 0){
-    		alert("이름은 공백일 수 없습니다.");
+    		openPopup("이름은 공백일 수 없습니다.");
     	}else if(!checkPhone(customer_phone)){
-    		alert("전화번호 형식이 잘못되었습니다.");
+    		openPopup("전화번호 형식이 잘못되었습니다.");
     	}else if(!checkEmail(customer_email)){
-    		alert("이메일 형식이 잘못되었습니다.");
+    		openPopup("이메일 형식이 잘못되었습니다.");
     	}else if(customer_address.length == 0){
-    		alert("주소는 공백일 수 없습니다.");
+    		openPopup("주소는 공백일 수 없습니다.");
     	}else{
     		$.ajax({
     			"type":"post",
@@ -332,15 +281,15 @@ $(document).ready(function(){
 			    	$("#customer_phone").attr("disabled",true);
 			    	$("#customer_email").attr("disabled",true);
 			    	$("#customer_address").attr("disabled",true);
-					alert(result.content);
+			    	
+			    	openPopup(result.content);
 					
     				var form = $("<form method='post' action='/LibraryService/customer/mainForm.do'></form>");
     				$("body").append(form);
     				form.submit();
     			},
         		"error": function(xhr, status, error) {
-      			  var err = JSON.parse(xhr.responseText);
-      			  alert(err.content);
+        			openPopup(JSON.parse(xhr.responseText).content);
         		}
     		});
         }

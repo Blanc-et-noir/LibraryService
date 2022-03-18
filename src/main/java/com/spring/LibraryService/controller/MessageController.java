@@ -171,7 +171,7 @@ public class MessageController {
 	//============================================================================================
 	//메세지 삭제 요청을 처리하는 메소드.
 	//============================================================================================
-	@RequestMapping(value="/message/deleteMessage.do")
+	@RequestMapping(value="/message/deleteAllMessage.do")
 	public ResponseEntity<HashMap> deleteAllMessage(@RequestParam HashMap param, HttpServletRequest request){
 		HashMap result = new HashMap();
 		try {

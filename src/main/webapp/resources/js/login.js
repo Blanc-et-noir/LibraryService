@@ -29,7 +29,7 @@ $(document).ready(function(){
     	var customer_id = $("#customer_id").val();
     	var customer_pw = $("#customer_pw").val();
         if(!check(customer_id)||!check(customer_pw)){
-        	alert("아이디와 비밀번호는 알파벳과 숫자로 8자리이상 16자리이하 입니다.");
+			  openPopup("아이디와 비밀번호는 알파벳과 숫자로 8자리이상 16자리이하로 구성해야 합니다.");
         }else{	
         	//============================================================================================
         	//서버로 부터 공개키를 전달받는데, 이에 대응되는 개인키는 서버의 세션에 저장되어있음.
@@ -57,19 +57,19 @@ $(document).ready(function(){
                 				$("body").append(form);
                 				form.submit();
                 			}else{
-                    			alert(result.content);
+                				openPopup(result.content);
                 			}
                 		},
                 		"error": function(xhr, status, error) {
                 			  var err = JSON.parse(xhr.responseText);
-                			  alert(err.content);
+                			  openPopup(err.content);
                   		}
                 	})
         		},
         		"error": function(xhr, status, error) {
-        			  var err = JSON.parse(xhr.responseText);
-        			  alert(err.content);
-          		}
+      			  var err = JSON.parse(xhr.responseText);
+      			  openPopup(err.content);
+        		}
         	});
         }
     });

@@ -302,22 +302,18 @@ public class CustomerController {
 			try {
 				return customerService.validateAnswer(param,request);
 			}catch(InvalidPasswordHintAnswerException e) {
-				e.printStackTrace();
 				result.put("flag", "false");
 				result.put("content", e.getMessage());
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}catch(MessagingException e) {
-				e.printStackTrace();
 				result.put("flag", "false");
 				result.put("content", "이메일전송중 오류가 발생했습니다.");
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}catch(MailSendException e) {
-				e.printStackTrace();
 				result.put("flag", "false");
 				result.put("content", "이메일전송중 오류가 발생했습니다.\n이메일주소를 다시 확인하세요.");
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);
 			}catch(Exception e) {
-				e.printStackTrace();
 				result.put("flag", "false");
 				result.put("content", "비밀번호 변경에 실패했습니다.");
 				return new ResponseEntity<HashMap>(result,HttpStatus.BAD_REQUEST);

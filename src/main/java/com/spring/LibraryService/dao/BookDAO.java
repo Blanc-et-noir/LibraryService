@@ -240,7 +240,6 @@ public class BookDAO implements BookDAOInterface{
 	//============================================================================================
 	public void checkRenewCount(HashMap param) throws ExhaustedRenewCountException{
 		int renewCount=0;
-		System.out.println(param.get("check_out_id")+"체크아웃아이디");
 		if((renewCount = sqlSession.selectOne("book.checkRenewCount", param))>=2) {
 			throw new ExhaustedRenewCountException();
 		}
