@@ -1,16 +1,48 @@
-## Library Service
-- [Development Progress](https://blanc-et-noir.tistory.com/notice/52)
-- [Development Log](https://blanc-et-noir.tistory.com/category/Web%20Service/%EB%8F%84%EC%84%9C%20%EC%A0%95%EB%B3%B4%20%EC%A0%9C%EA%B3%B5%20%EC%9B%B9%20%EC%84%9C%EB%B9%84%EC%8A%A4)
+## 도서 정보 제공 웹 서비스
 
-## Source Code
-- [Controller](https://github.com/Blanc-et-noir/LibraryService/tree/master/src/main/java/com/spring/LibraryService/controller)
-- [Service](https://github.com/Blanc-et-noir/LibraryService/tree/master/src/main/java/com/spring/LibraryService/service)
-- [Dao](https://github.com/Blanc-et-noir/LibraryService/tree/master/src/main/java/com/spring/LibraryService/dao)
-- [VO](https://github.com/Blanc-et-noir/LibraryService/tree/master/src/main/java/com/spring/LibraryService/vo)
-- [Encrypt](https://github.com/Blanc-et-noir/LibraryService/tree/master/src/main/java/com/spring/LibraryService/encrypt)
-- [AOP](https://github.com/Blanc-et-noir/LibraryService/tree/master/src/main/java/com/spring/LibraryService/aop)
+### 서비스 개요
+<pre>
+1. 관리자는 사용자들의 도서 대출, 반납, 대춘 현황 조회 등의 업무를 처리할 수 있고
+   또한 관리자는 새로운 도서 정보를 추가, 삭제, 수정할 수 있음.
+   
+2. 사용자들은 게시글 및 답글 작성, 수정, 삭제, 조회 등의 기본적인 커뮤니티 기능 외에
+   메세지를 서로 주고 받을 수 있도록 메세지 서비스를 제공함.
+</pre>
 
-- [CSS](https://github.com/Blanc-et-noir/LibraryService/tree/master/src/main/webapp/resources/css)
-- [JS](https://github.com/Blanc-et-noir/LibraryService/tree/master/src/main/webapp/resources/js)
+<br/>
+<br/>
 
-- [Mapper](https://github.com/Blanc-et-noir/LibraryService/tree/master/src/main/java/mybatis/mappers)
+### 서비스 개발 목표
+<pre>
+1. 스프링 프레임워크 및 마이바티스 프레임워크를 처음 익히고, 학습하며 이를 실제 웹 서비스
+   개발에 적용함으로써 프레임워크에 익숙해지는 것이 가장 큰 목표.
+   
+2. ER 다이어그램을 작성하고, 이에 맞게 DB 테이블들을 구성하는 방법을 익히고
+   제약조건과 시퀀스, 프로시저, 트리거, 함수 등의 여러 기능들을 활용하는 방법을 학습함.
+   
+3. 스프링 프레임워크에서 제공하는 여러 기능을 활용하여 MVC 패턴의 웹 서비스를 구성해보는 것과
+   그 외에 인터셉터, AOP에 대해 학습하고 MAVEN을 활용한 라이브러리 관리 등에 익숙해지는 것이 목표임.
+</pre>
+
+<br/>
+<br/>
+
+### 서비스 특징
+<pre>
+1. 도서 대출 및 반납은 오직 관리자만 수행할 수 있으며, 대출 연장은 관리자, 사용자 모두 가능함.
+   연장은 최대 2회까지 가능하며, 연체된 도서가 존재하면 연체일수만큼 대출가능한 날짜가 늦춰짐.
+   이러한 동작은 백엔드 서버에서 자동으로 처리함.
+
+2. 게시글에 여러개의 이미지를 첨부할 수 있도록 각 이미지 파일들의 이름이 중복되어 서버에 저장되지 않도록
+   UUID를 활용하여 임시 이미지 파일 이름을 부여함. 게시글 수정시 각 이미지 파일이 수정, 삭제, 추가 되는 것인지
+   판단하여 자동으로 이미지 파일들을 서버에서 처리함.
+
+3. TLS를 적용하기 이전에 클라이언트가 서버로 비밀번호 및 비밀번호 찾기 질문에 대한 답을 전송할 때
+   반드시 RSA2048 암호화하여 전송함으로써 유출되지 않도록 처리함.
+   
+   암호화에 사용한 공개키에 대한 비밀키는 클라이언트의 세션정보에 저장하며, 이 공개키 및 비밀키는
+   매번 무작위로 변경되므로 보안성을 강화함.
+   
+   DB에 비밀번호 및 비밀번호 찾기 질문에 대한 답과 같이 민감한 정보는 무작위 SALT값을 활용하여
+   SHA512를 두 번 적용한 해시값을 저장하므로 복호화가 불가능함.
+</pre>
