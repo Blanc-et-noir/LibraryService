@@ -49,4 +49,4 @@
 
 
 ### 스키마 다이어그램
-<img width ="100%" src="{https://user-images.githubusercontent.com/83106564/162621775-4259abc1-01b8-4c2b-9181-470c41d9d0c1.png}"/>
+<img width ="100%" src="https://user-images.githubusercontent.com/83106564/162621775-4259abc1-01b8-4c2b-9181-470c41d9d0c1.png"/>
