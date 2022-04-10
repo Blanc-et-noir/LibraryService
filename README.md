@@ -46,3 +46,7 @@
    DB에 비밀번호 및 비밀번호 찾기 질문에 대한 답과 같이 민감한 정보는 무작위 SALT값을 활용하여
    SHA512를 두 번 적용한 해시값을 저장하므로 복호화가 불가능함.
 </pre>
+
+
+### 스키마 다이어그램
+<img width ="100%" src="{https://user-images.githubusercontent.com/83106564/162621775-4259abc1-01b8-4c2b-9181-470c41d9d0c1.png}"/>
