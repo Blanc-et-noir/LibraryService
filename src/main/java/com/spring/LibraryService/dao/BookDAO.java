@@ -15,10 +15,6 @@ import com.spring.LibraryService.exception.book.RunOutOfBookNumberException;
 @Repository("bookDAO")
 public class BookDAO implements BookDAOInterface{
 	
-	
-	
-	
-	
 	@Autowired
 	private SqlSession sqlSession;
 	
